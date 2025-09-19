@@ -314,6 +314,26 @@
             height: 60vh;
             margin-bottom: 1rem;
         }
+        
+        /* Ultra-aggressive mobile layout for PWA */
+        @media screen and (max-width: 1200px) {
+            .columns {
+                display: block !important;
+                flex-direction: column !important;
+                height: auto !important;
+            }
+            .column {
+                display: block !important;
+                width: 100% !important;
+                height: auto !important;
+                overflow-y: visible !important;
+                margin-bottom: 1rem !important;
+            }
+            .chat-container {
+                height: 50vh !important;
+                margin-bottom: 1rem !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -432,7 +452,7 @@
 
                 <!-- Sidebar -->
                 <div class="column is-3">
-                    <div class="box">
+                    <div class="box" style="display: none;">
                         <h3 class="title is-5 section-title">
                             <i class="fas fa-info-circle"></i>
                             Current Mode
@@ -443,7 +463,7 @@
                         </div>
                     </div>
 
-                    <div class="box">
+                    <div class="box" style="display: none;">
                         <h3 class="title is-5 section-title">
                             <i class="fas fa-cog"></i>
                             Settings
@@ -482,7 +502,7 @@
                         </div>
             </div>
 
-                    <div class="box">
+                    <div class="box" style="display: none;">
                         <h3 class="title is-5 section-title">
                             <i class="fas fa-check-circle"></i>
                             Status
@@ -1017,10 +1037,36 @@
 
         // Force mobile layout for PWA
         function forceMobileLayout() {
-            if (window.matchMedia('(max-width: 1024px)').matches || 
-                window.navigator.standalone || 
-                document.referrer.includes('android-app://')) {
+            // Check if we're in PWA mode or mobile
+            const isPWA = window.navigator.standalone || 
+                          document.referrer.includes('android-app://') ||
+                          window.matchMedia('(max-width: 1200px)').matches;
+            
+            if (isPWA) {
                 document.body.classList.add('mobile-layout');
+                
+                // Force CSS changes directly
+                const columns = document.querySelector('.columns');
+                if (columns) {
+                    columns.style.display = 'block';
+                    columns.style.flexDirection = 'column';
+                    columns.style.height = 'auto';
+                }
+                
+                const allColumns = document.querySelectorAll('.column');
+                allColumns.forEach(col => {
+                    col.style.display = 'block';
+                    col.style.width = '100%';
+                    col.style.height = 'auto';
+                    col.style.overflowY = 'visible';
+                    col.style.marginBottom = '1rem';
+                });
+                
+                const chatContainer = document.querySelector('.chat-container');
+                if (chatContainer) {
+                    chatContainer.style.height = '50vh';
+                    chatContainer.style.marginBottom = '1rem';
+                }
             }
         }
         
