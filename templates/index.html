@@ -51,45 +51,59 @@
             color: white;
         }
         .mode-selector {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            display: flex;
+            flex-direction: column;
             gap: 0.5rem;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
         }
         .mode-card {
             padding: 0.75rem;
             border: 2px solid #e1e5e9;
             border-radius: 8px;
-            text-align: center;
+            text-align: left;
             cursor: pointer;
             transition: all 0.3s ease;
             background-color: white;
-            min-height: 70px;
+            min-height: 60px;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
+            gap: 0.75rem;
         }
         .mode-card:hover {
             border-color: #007bff;
             background-color: #f8f9ff;
-            transform: translateY(-2px);
+            transform: translateX(3px);
             box-shadow: 0 4px 12px rgba(0,123,255,0.15);
         }
         .mode-card.active {
             border-color: #007bff;
             background-color: #e3f2fd;
-            transform: translateY(-2px);
+            transform: translateX(3px);
             box-shadow: 0 6px 20px rgba(0,123,255,0.25);
+            border-left: 4px solid #007bff;
         }
         .mode-icon {
             font-size: 1.5rem;
-            margin-bottom: 0.25rem;
+            color: #007bff;
+            flex-shrink: 0;
         }
         @media (max-width: 768px) {
             .user-message { margin-left: 10%; }
             .bot-message { margin-right: 10%; }
-            .mode-selector { grid-template-columns: repeat(2, 1fr); }
+            .mode-selector { 
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.25rem;
+            }
+            .mode-card {
+                flex: 1;
+                min-width: calc(50% - 0.125rem);
+                min-height: 50px;
+                padding: 0.5rem;
+            }
+            .mode-icon {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
@@ -112,50 +126,6 @@
                         <i class="fas fa-comments"></i>
                         Chat with AYBot
                     </h1>
-                    
-                    <!-- Mode Selector -->
-                    <div class="mode-selector" id="modeSelector">
-                        <div class="mode-card active" data-mode="default">
-                            <div class="mode-icon"><i class="fas fa-question-circle"></i></div>
-                            <div>Ask Anything</div>
-                        </div>
-                        <div class="mode-card" data-mode="translator">
-                            <div class="mode-icon"><i class="fas fa-language"></i></div>
-                            <div>Translator</div>
-                        </div>
-                        <div class="mode-card" data-mode="weather">
-                            <div class="mode-icon"><i class="fas fa-cloud-sun"></i></div>
-                            <div>Weather</div>
-                        </div>
-                        <div class="mode-card" data-mode="news">
-                            <div class="mode-icon"><i class="fas fa-newspaper"></i></div>
-                            <div>News</div>
-                        </div>
-                        <div class="mode-card" data-mode="finance">
-                            <div class="mode-icon"><i class="fas fa-chart-line"></i></div>
-                            <div>Finance</div>
-                        </div>
-                        <div class="mode-card" data-mode="code_helper">
-                            <div class="mode-icon"><i class="fas fa-code"></i></div>
-                            <div>Code Helper</div>
-                        </div>
-                        <div class="mode-card" data-mode="study_buddy">
-                            <div class="mode-icon"><i class="fas fa-graduation-cap"></i></div>
-                            <div>Study Buddy</div>
-                        </div>
-                        <div class="mode-card" data-mode="creative_writer">
-                            <div class="mode-icon"><i class="fas fa-pen-fancy"></i></div>
-                            <div>Creative Writer</div>
-                        </div>
-                        <div class="mode-card" data-mode="health_advisor">
-                            <div class="mode-icon"><i class="fas fa-heartbeat"></i></div>
-                            <div>Health Advisor</div>
-            </div>
-                        <div class="mode-card" data-mode="travel_guide">
-                            <div class="mode-icon"><i class="fas fa-map-marked-alt"></i></div>
-                            <div>Travel Guide</div>
-            </div>
-                    </div>
 
                     <!-- Chat History -->
                     <div class="chat-container" id="chatContainer">
@@ -199,6 +169,56 @@
 
                 <!-- Sidebar -->
                 <div class="column is-4">
+                    <!-- Mode Selector -->
+                    <div class="box">
+                        <h3 class="title is-5">
+                            <i class="fas fa-tools"></i>
+                            AI Modes
+                        </h3>
+                        <div class="mode-selector" id="modeSelector">
+                            <div class="mode-card active" data-mode="default">
+                                <div class="mode-icon"><i class="fas fa-question-circle"></i></div>
+                                <div>Ask Anything</div>
+                            </div>
+                            <div class="mode-card" data-mode="translator">
+                                <div class="mode-icon"><i class="fas fa-language"></i></div>
+                                <div>Translator</div>
+                            </div>
+                            <div class="mode-card" data-mode="weather">
+                                <div class="mode-icon"><i class="fas fa-cloud-sun"></i></div>
+                                <div>Weather</div>
+                            </div>
+                            <div class="mode-card" data-mode="news">
+                                <div class="mode-icon"><i class="fas fa-newspaper"></i></div>
+                                <div>News</div>
+                            </div>
+                            <div class="mode-card" data-mode="finance">
+                                <div class="mode-icon"><i class="fas fa-chart-line"></i></div>
+                                <div>Finance</div>
+                            </div>
+                            <div class="mode-card" data-mode="code_helper">
+                                <div class="mode-icon"><i class="fas fa-code"></i></div>
+                                <div>Code Helper</div>
+                            </div>
+                            <div class="mode-card" data-mode="study_buddy">
+                                <div class="mode-icon"><i class="fas fa-graduation-cap"></i></div>
+                                <div>Study Buddy</div>
+                            </div>
+                            <div class="mode-card" data-mode="creative_writer">
+                                <div class="mode-icon"><i class="fas fa-pen-fancy"></i></div>
+                                <div>Creative Writer</div>
+                            </div>
+                            <div class="mode-card" data-mode="health_advisor">
+                                <div class="mode-icon"><i class="fas fa-heartbeat"></i></div>
+                                <div>Health Advisor</div>
+                            </div>
+                            <div class="mode-card" data-mode="travel_guide">
+                                <div class="mode-icon"><i class="fas fa-map-marked-alt"></i></div>
+                                <div>Travel Guide</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="box">
                         <h3 class="title is-5">
                             <i class="fas fa-info-circle"></i>
