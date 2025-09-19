@@ -275,36 +275,35 @@
             margin-bottom: 1rem;
         }
         
-        /* Ultra-aggressive mobile layout for PWA */
+        /* Simple mobile layout */
         @media screen and (max-width: 1200px) {
             .columns {
-                display: flex !important;
-                flex-direction: row !important;
-                height: 100vh !important;
-                overflow: hidden !important;
+                display: block !important;
+                height: auto !important;
             }
             .column.is-2 {
-                width: 20% !important;
-                height: 100vh !important;
-                overflow-y: auto !important;
-                margin-bottom: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                margin-bottom: 1rem !important;
             }
             .column.is-10 {
-                width: 80% !important;
-                height: 100vh !important;
-                overflow-y: auto !important;
-                margin-bottom: 0 !important;
+                width: 100% !important;
+                height: auto !important;
             }
             .chat-container {
-                height: 75vh !important;
-                margin-bottom: 0 !important;
+                height: 60vh !important;
+                margin-bottom: 1rem !important;
             }
             .mode-selector {
-                flex-direction: column !important;
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
                 gap: 0.5rem !important;
             }
             .mode-card {
-                min-height: 40px !important;
+                flex: 1 !important;
+                min-width: calc(50% - 0.25rem) !important;
+                min-height: 50px !important;
                 padding: 0.5rem !important;
                 font-size: 0.8rem !important;
             }
@@ -961,7 +960,7 @@
             });
         }
 
-        // Force mobile layout for PWA
+        // Simple mobile layout detection
         function forceMobileLayout() {
             // Check if we're in PWA mode or mobile
             const isPWA = window.navigator.standalone || 
@@ -970,39 +969,10 @@
             
             if (isPWA) {
                 document.body.classList.add('mobile-layout');
-                
-                // Force CSS changes directly - HORIZONTAL layout
-                const columns = document.querySelector('.columns');
-                if (columns) {
-                    columns.style.display = 'flex';
-                    columns.style.flexDirection = 'row';
-                    columns.style.height = '100vh';
-                    columns.style.overflow = 'hidden';
-                }
-                
-                // Set left sidebar (modes) to 20%
-                const leftColumn = document.querySelector('.column.is-2');
-                if (leftColumn) {
-                    leftColumn.style.width = '20%';
-                    leftColumn.style.height = '100vh';
-                    leftColumn.style.overflowY = 'auto';
-                    leftColumn.style.marginBottom = '0';
-                }
-                
-                // Set chat area to 80%
-                const chatColumn = document.querySelector('.column.is-10');
-                if (chatColumn) {
-                    chatColumn.style.width = '80%';
-                    chatColumn.style.height = '100vh';
-                    chatColumn.style.overflowY = 'auto';
-                    chatColumn.style.marginBottom = '0';
-                }
-                
-                const chatContainer = document.querySelector('.chat-container');
-                if (chatContainer) {
-                    chatContainer.style.height = '75vh';
-                    chatContainer.style.marginBottom = '0';
-                }
+                console.log('Mobile layout applied');
+            } else {
+                document.body.classList.remove('mobile-layout');
+                console.log('Desktop layout applied');
             }
         }
         
