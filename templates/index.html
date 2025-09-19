@@ -61,8 +61,13 @@
             font-size: 0.75rem;
             padding: 0.25rem 0.5rem;
             border-radius: 4px;
-            background-color: #555555;
+            background-color: #3498DB;
             color: white;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            border: 1px solid #2980B9;
+            box-shadow: 0 2px 4px rgba(52,152,219,0.3);
         }
         .mode-selector {
             display: flex;
@@ -451,6 +456,7 @@
             
             const info = modeInfo[currentMode];
             document.getElementById('currentModeInfo').innerHTML = `
+                <span class="mode-badge">${currentMode.toUpperCase()}</span>
                 <p><strong>${info.name}</strong></p>
                 <p class="is-size-7">${info.desc}</p>
             `;
@@ -512,7 +518,7 @@
             messageDiv.className = `message ${sender}-message`;
             
             const timestamp = new Date().toLocaleTimeString();
-            const modeBadge = sender === 'user' ? `<span class="mode-badge">${currentMode}</span>` : '';
+            const modeBadge = sender === 'user' ? `<span class="mode-badge">${currentMode.toUpperCase()}</span>` : '';
             
             messageDiv.innerHTML = `
                 <div class="content">
