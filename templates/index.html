@@ -338,55 +338,44 @@
             margin-bottom: 1rem;
         }
         
-        /* Optimized mobile layout */
+        /* Ultra-simple mobile layout */
         @media screen and (max-width: 1200px) {
             .columns {
                 display: block !important;
                 height: auto !important;
                 overflow: visible !important;
             }
-            .column.is-2 {
+            .column {
                 width: 100% !important;
                 height: auto !important;
                 margin-bottom: 1rem !important;
                 overflow: visible !important;
             }
-            .column.is-10 {
-                width: 100% !important;
-                height: auto !important;
-                overflow: visible !important;
-            }
             .chat-container {
-                height: 60vh !important;
-                max-height: 60vh !important;
+                height: 50vh !important;
+                max-height: 50vh !important;
                 margin-bottom: 1rem !important;
                 overflow-y: auto !important;
                 overflow-x: hidden !important;
             }
             .mode-selector {
-                display: flex !important;
-                flex-direction: row !important;
-                flex-wrap: wrap !important;
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
                 gap: 0.5rem !important;
             }
             .mode-card {
-                flex: 1 !important;
-                min-width: calc(50% - 0.25rem) !important;
-                min-height: auto !important;
-                height: auto !important;
+                min-height: 60px !important;
                 padding: 0.75rem !important;
                 font-size: 0.9rem !important;
-                flex-wrap: wrap !important;
-                word-wrap: break-word !important;
-                overflow-wrap: break-word !important;
-                touch-action: manipulation !important;
+                text-align: center !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 0.25rem !important;
             }
-            .mode-card:hover {
-                transform: none !important;
-            }
-            .mode-card:active {
-                transform: scale(0.98) !important;
-                background-color: #1a237e !important;
+            .mode-icon {
+                font-size: 1.2rem !important;
             }
             .button {
                 min-height: 44px !important;
@@ -1050,17 +1039,12 @@
 
         // Simple mobile layout detection
         function forceMobileLayout() {
-            // Check if we're in PWA mode or mobile
-            const isPWA = window.navigator.standalone || 
-                          document.referrer.includes('android-app://') ||
-                          window.matchMedia('(max-width: 1200px)').matches;
-            
-            if (isPWA) {
+            // Just add mobile class for PWA detection
+            if (window.navigator.standalone || document.referrer.includes('android-app://')) {
                 document.body.classList.add('mobile-layout');
-                console.log('Mobile layout applied');
+                console.log('PWA mobile layout applied');
             } else {
                 document.body.classList.remove('mobile-layout');
-                console.log('Desktop layout applied');
             }
         }
         
