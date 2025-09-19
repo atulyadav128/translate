@@ -39,9 +39,9 @@ def generate_response():
         # Prompt templates for each mode
         if mode == 'translator':
             if language == "English":
-                prompt = f"Translate the following text to English: {text}"
+                prompt = f"Translate the following text to English. Return only the translated text, no explanations or additional text: {text}"
             else:
-                prompt = f"Translate the following text to {language}: {text}"
+                prompt = f"Translate the following text to {language}. Return only the translated text, no explanations or additional text: {text}"
         elif mode == 'weather':
             if text:
                 prompt = f"Provide current weather information for {text}. Include temperature, conditions, and a brief forecast. If you cannot access real-time weather data, provide general weather information about {text} and explain that you cannot access live weather data."
