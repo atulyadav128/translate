@@ -39,8 +39,8 @@ def generate_response():
 
         # Prompt templates for each mode
         if mode == 'translator':
-            if direction == "from":
-                prompt = f"Translate the following text from {language} to English: {text}"
+            if direction == "from" or language == "English":
+                prompt = f"Translate the following text to English: {text}"
             else:
                 prompt = f"Translate the following text to {language}: {text}"
         elif mode == 'weather':

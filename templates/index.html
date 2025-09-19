@@ -200,6 +200,7 @@
                             <div class="control">
                                 <div class="select is-fullwidth">
                                     <select id="translationLanguage">
+                                        <option value="English">English</option>
                                         <option value="Spanish">Spanish</option>
                                         <option value="French">French</option>
                                         <option value="German">German</option>
@@ -299,8 +300,16 @@
             document.getElementById('loadingModal').classList.add('is-active');
             
             // Prepare request data
-            const translationDirection = document.getElementById('translationDirection').value;
             const translationLanguage = document.getElementById('translationLanguage').value;
+            let translationDirection = document.getElementById('translationDirection').value;
+            
+            // Auto-set direction based on language selection
+            if (translationLanguage === 'English') {
+                translationDirection = 'from'; // Translate TO English
+            } else if (translationDirection === 'from' && translationLanguage !== 'English') {
+                // If direction is "from" but language is not English, change to "to"
+                translationDirection = 'to';
+            }
             
             const requestData = {
                 mode: currentMode,
@@ -392,6 +401,19 @@
                 showNotification('Copied to clipboard!', 'success');
             } else {
                 showNotification('No response to copy', 'warning');
+            }
+        });
+
+        // Auto-update translation direction when language changes
+        document.getElementById('translationLanguage').addEventListener('change', function() {
+            const selectedLanguage = this.value;
+            const directionSelect = document.getElementById('translationDirection');
+            
+            if (selectedLanguage === 'English') {
+                directionSelect.value = 'from';
+                directionSelect.disabled = true; // Disable direction selection for English
+            } else {
+                directionSelect.disabled = false; // Re-enable direction selection
             }
         });
 
