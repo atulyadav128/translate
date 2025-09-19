@@ -20,13 +20,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        body {
+            background-color: #1a1a1a !important;
+            color: #ffffff !important;
+        }
+        .navbar {
+            background-color: #2C3E50 !important;
+        }
+        .navbar-item {
+            color: #ffffff !important;
+        }
+        .navbar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
         .chat-container {
             max-height: 65vh;
             overflow-y: auto;
-            border: 1px solid #e1e5e9;
+            border: 1px solid #444444;
             border-radius: 8px;
             padding: 1rem;
-            background-color: #f8f9fa;
+            background-color: #2a2a2a;
         }
         .message {
             margin-bottom: 1rem;
@@ -39,15 +52,16 @@
             margin-left: 20%;
         }
         .bot-message {
-            background-color: white;
-            border: 1px solid #e1e5e9;
+            background-color: #3a3a3a;
+            border: 1px solid #555555;
+            color: #ffffff;
             margin-right: 20%;
         }
         .mode-badge {
             font-size: 0.75rem;
             padding: 0.25rem 0.5rem;
             border-radius: 4px;
-            background-color: #6c757d;
+            background-color: #555555;
             color: white;
         }
         .mode-selector {
@@ -58,12 +72,13 @@
         }
         .mode-card {
             padding: 0.75rem;
-            border: 2px solid #e1e5e9;
+            border: 2px solid #555555;
             border-radius: 8px;
             text-align: left;
             cursor: pointer;
             transition: all 0.3s ease;
-            background-color: white;
+            background-color: #2a2a2a;
+            color: #ffffff;
             min-height: 60px;
             display: flex;
             align-items: center;
@@ -71,13 +86,13 @@
         }
         .mode-card:hover {
             border-color: #3498DB;
-            background-color: #F8F9FA;
+            background-color: #3a3a3a;
             transform: translateX(3px);
             box-shadow: 0 4px 12px rgba(52,152,219,0.15);
         }
         .mode-card.active {
             border-color: #3498DB;
-            background-color: #E3F2FD;
+            background-color: #1e3a5f;
             transform: translateX(3px);
             box-shadow: 0 6px 20px rgba(52,152,219,0.25);
             border-left: 4px solid #3498DB;
@@ -93,10 +108,10 @@
         }
         .title-section .title {
             margin-bottom: 0.5rem;
-            color: #2C3E50;
+            color: #ffffff;
         }
         .title-section .subtitle {
-            color: #6c757d;
+            color: #cccccc;
             font-weight: 400;
         }
         .button:hover {
@@ -105,6 +120,40 @@
         }
         .button:active {
             transform: translateY(0);
+        }
+        .textarea {
+            background-color: #2a2a2a !important;
+            border-color: #555555 !important;
+            color: #ffffff !important;
+        }
+        .textarea:focus {
+            border-color: #3498DB !important;
+            box-shadow: 0 0 0 0.125em rgba(52,152,219,0.25) !important;
+        }
+        .textarea::placeholder {
+            color: #888888 !important;
+        }
+        .select select {
+            background-color: #2a2a2a !important;
+            border-color: #555555 !important;
+            color: #ffffff !important;
+        }
+        .select select:focus {
+            border-color: #3498DB !important;
+            box-shadow: 0 0 0 0.125em rgba(52,152,219,0.25) !important;
+        }
+        .box {
+            background-color: #2a2a2a !important;
+            border-color: #555555 !important;
+            color: #ffffff !important;
+        }
+        .label {
+            color: #ffffff !important;
+        }
+        .notification {
+            background-color: #2a2a2a !important;
+            color: #ffffff !important;
+            border-color: #555555 !important;
         }
         @media (max-width: 768px) {
             .user-message { margin-left: 10%; }
@@ -129,9 +178,9 @@
 <body>
     <nav class="navbar" style="background-color: #2C3E50;">
         <div class="navbar-brand">
-            <a class="navbar-item" href="/">
-                <i class="fas fa-brain"></i>
-                <strong>AYAI Central</strong>
+            <a class="navbar-item" href="/" style="color: #ffffff !important;">
+                <i class="fas fa-brain" style="color: #ffffff !important;"></i>
+                <strong style="color: #ffffff !important;">AYAI Central</strong>
             </a>
         </div>
     </nav>
