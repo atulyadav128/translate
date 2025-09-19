@@ -270,6 +270,50 @@
                 margin-bottom: 1rem;
             }
         }
+        
+        /* Force mobile layout for PWA */
+        @media (max-width: 1024px) {
+            .columns {
+                flex-direction: column !important;
+                height: auto !important;
+            }
+            .column {
+                height: auto !important;
+                overflow-y: visible !important;
+            }
+            .column.is-3 {
+                width: 100% !important;
+                margin-bottom: 1rem;
+            }
+            .column.is-6 {
+                width: 100% !important;
+            }
+            .chat-container {
+                height: 60vh;
+                margin-bottom: 1rem;
+            }
+        }
+        
+        /* Force mobile layout class */
+        .mobile-layout .columns {
+            flex-direction: column !important;
+            height: auto !important;
+        }
+        .mobile-layout .column {
+            height: auto !important;
+            overflow-y: visible !important;
+        }
+        .mobile-layout .column.is-3 {
+            width: 100% !important;
+            margin-bottom: 1rem;
+        }
+        .mobile-layout .column.is-6 {
+            width: 100% !important;
+        }
+        .mobile-layout .chat-container {
+            height: 60vh;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -971,10 +1015,23 @@
             });
         }
 
+        // Force mobile layout for PWA
+        function forceMobileLayout() {
+            if (window.matchMedia('(max-width: 1024px)').matches || 
+                window.navigator.standalone || 
+                document.referrer.includes('android-app://')) {
+                document.body.classList.add('mobile-layout');
+            }
+        }
+        
         // Initialize
         updateModeInfo();
         initSpeechRecognition();
         initVoiceSelection();
+        forceMobileLayout();
+        
+        // Re-check on resize
+        window.addEventListener('resize', forceMobileLayout);
     </script>
 </body>
 </html>
