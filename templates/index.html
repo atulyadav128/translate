@@ -198,7 +198,7 @@
                                 <div class="select is-fullwidth">
                                     <select id="translationLanguage">
                                         <option value="English">English (from any language)</option>
-                                        <option value="Spanish">Spanish</option>
+                                        <option value="Spanish" selected>Spanish</option>
                                         <option value="French">French</option>
                                         <option value="German">German</option>
                                         <option value="Italian">Italian</option>
@@ -227,7 +227,8 @@
                                 <h4 class="is-size-6 has-text-weight-bold">🎤 Voice Features</h4>
                                 <p class="is-size-7">
                                     <strong>Voice Input:</strong> Click the microphone button to speak your message.<br>
-                                    <strong>Voice Output:</strong> Click "Speak Response" to hear responses.<br>
+                                    <strong>Auto-Speak:</strong> Responses are automatically spoken aloud.<br>
+                                    <strong>Manual Speak:</strong> Click "Speak Response" to replay.<br>
                                     <em>Note: Allow microphone access when prompted by your browser.</em>
                                 </p>
                             </div>
@@ -322,6 +323,11 @@
                     const responseText = response.data.response_text;
                     addMessageToChat(responseText, 'bot');
                     showNotification('Response generated successfully!', 'success');
+                    
+                    // Auto-speak the response
+                    setTimeout(() => {
+                        speakResponseContent(responseText);
+                    }, 500); // Small delay to ensure the message is added to chat
                 })
                 .catch(error => {
                     console.error('API Error:', error);
@@ -488,6 +494,37 @@
                 speechSynthesis.cancel();
                 document.getElementById('speakBtn').classList.remove('is-loading');
                 document.getElementById('speakBtn').innerHTML = '<i class="fas fa-volume-up"></i> Speak Response';
+            }
+        }
+
+        // Function to speak response content directly
+        function speakResponseContent(responseText) {
+            if (speechSynthesis && responseText) {
+                // Stop any current speech
+                speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(responseText);
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                utterance.volume = 0.8;
+                
+                utterance.onstart = function() {
+                    document.getElementById('speakBtn').classList.add('is-loading');
+                    document.getElementById('speakBtn').innerHTML = '<i class="fas fa-stop"></i> Stop';
+                };
+                
+                utterance.onend = function() {
+                    document.getElementById('speakBtn').classList.remove('is-loading');
+                    document.getElementById('speakBtn').innerHTML = '<i class="fas fa-volume-up"></i> Speak Response';
+                };
+                
+                utterance.onerror = function(event) {
+                    console.error('Speech synthesis error:', event.error);
+                    document.getElementById('speakBtn').classList.remove('is-loading');
+                    document.getElementById('speakBtn').innerHTML = '<i class="fas fa-volume-up"></i> Speak Response';
+                };
+                
+                speechSynthesis.speak(utterance);
             }
         }
 
