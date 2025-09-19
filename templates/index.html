@@ -185,7 +185,18 @@
                             Settings
                         </h3>
                         <div class="field">
-                            <label class="label">Language for Translation</label>
+                            <label class="label">Translation Direction</label>
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select id="translationDirection">
+                                        <option value="to">To Other Languages</option>
+                                        <option value="from">From Other Languages to English</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Target Language</label>
                             <div class="control">
                                 <div class="select is-fullwidth">
                                     <select id="translationLanguage">
@@ -252,7 +263,7 @@
         function updateModeInfo() {
             const modeInfo = {
                 'default': { name: 'Ask Anything', desc: 'Ask me anything and I\'ll do my best to help you!' },
-                'translator': { name: 'Translator', desc: 'Translate text to any language' },
+                'translator': { name: 'Translator', desc: 'Translate text to/from any language' },
                 'weather': { name: 'Weather Info', desc: 'Get weather information and forecasts' },
                 'news': { name: 'News Summary', desc: 'Latest news headlines and summaries' },
                 'finance': { name: 'Financial Advice', desc: 'Money management and investment tips' },
@@ -288,10 +299,14 @@
             document.getElementById('loadingModal').classList.add('is-active');
             
             // Prepare request data
+            const translationDirection = document.getElementById('translationDirection').value;
+            const translationLanguage = document.getElementById('translationLanguage').value;
+            
             const requestData = {
                 mode: currentMode,
                 text: text,
-                language: document.getElementById('translationLanguage').value
+                language: translationLanguage,
+                direction: translationDirection
             };
 
             // Send request

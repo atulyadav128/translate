@@ -24,6 +24,7 @@ def generate_response():
         mode = data.get("mode", "default")
         text = data.get("text", "")
         language = data.get("language", "Spanish")
+        direction = data.get("direction", "to")
         
         # Check if API key is available
         if not openai.api_key:
@@ -38,7 +39,10 @@ def generate_response():
 
         # Prompt templates for each mode
         if mode == 'translator':
-            prompt = f"Translate the following text to {language}: {text}"
+            if direction == "from":
+                prompt = f"Translate the following text from {language} to English: {text}"
+            else:
+                prompt = f"Translate the following text to {language}: {text}"
         elif mode == 'weather':
             if text:
                 prompt = f"Provide current weather information for {text}. Include temperature, conditions, and a brief forecast. If you cannot access real-time weather data, provide general weather information about {text} and explain that you cannot access live weather data."
