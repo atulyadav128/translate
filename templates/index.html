@@ -73,6 +73,9 @@
             margin-right: 20%;
             border-radius: 18px 18px 18px 4px;
         }
+        .bot-message .content div:not(.is-size-7) {
+            color: #4A90E2 !important;
+        }
         .mode-badge {
             font-size: 0.75rem;
             padding: 0.25rem 0.5rem;
@@ -255,7 +258,7 @@
         <div class="navbar-brand">
             <a class="navbar-item" href="/" style="color: #ffffff !important;">
                 <i class="fas fa-brain" style="color: #FF69B4 !important; margin-right: 0.75rem; font-size: 2rem;"></i>
-                <strong style="color: #4A90E2 !important; font-size: 1.5rem;">AYAI Central</strong>
+                <strong style="color: #FF8C00 !important; font-size: 1.5rem;">AYAI Central</strong>
             </a>
         </div>
     </nav>
@@ -328,7 +331,7 @@
                     <div class="chat-container" id="chatContainer">
                         <div class="message bot-message">
                             <div class="content">
-                                <strong><span style="color: #4A90E2 !important;">AYTool</span>:</strong> Hello! I'm your personal AI assistant. Choose a mode and start chatting with me!
+                                <strong><span style="color: #4A90E2 !important;">AYTool</span>:</strong><br><span style="margin-top: 0.5rem; display: block;">Hello! I'm your personal AI assistant. Choose a mode and start chatting with me!</span>
                     </div>
                 </div>
             </div>
@@ -565,7 +568,7 @@
             messageDiv.innerHTML = `
                 <div class="content">
                     <strong>${sender === 'user' ? 'You' : '<span style="color: #4A90E2 !important;">AYTool</span>'}:</strong> ${modeBadge}
-                    <div class="mt-2">${text}</div>
+                    <div class="mt-2" style="margin-top: 0.5rem !important;">${text}</div>
                     <div class="is-size-7 has-text-grey mt-1">${timestamp}</div>
                 </div>
             `;
@@ -599,7 +602,7 @@
             document.getElementById('chatContainer').innerHTML = `
                 <div class="message bot-message">
                     <div class="content">
-                        <strong><span style="color: #4A90E2 !important;">AYTool</span>:</strong> Chat cleared! How can I help you today?
+                        <strong><span style="color: #4A90E2 !important;">AYTool</span>:</strong><br><span style="margin-top: 0.5rem; display: block;">Chat cleared! How can I help you today?</span>
                     </div>
                 </div>
             `;
