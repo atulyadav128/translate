@@ -378,8 +378,8 @@
                             <div class="control">
                                 <div class="select is-fullwidth">
                                     <select id="translationLanguage">
-                                        <option value="English">English (from any language)</option>
-                                        <option value="Spanish" selected>Spanish</option>
+                                        <option value="English" selected>English (from any language)</option>
+                                        <option value="Spanish">Spanish</option>
                                         <option value="Hindi">Hindi</option>
                                         <option value="French">French</option>
                                         <option value="German">German</option>
@@ -483,6 +483,16 @@
                 <p><strong>${info.name}</strong></p>
                 <p class="is-size-7">${info.desc}</p>
             `;
+            
+            // Smart language switching based on mode
+            const languageSelect = document.getElementById('translationLanguage');
+            if (currentMode === 'translator') {
+                // Set Spanish as default for translator mode
+                languageSelect.value = 'Spanish';
+            } else {
+                // Set English as default for all other modes
+                languageSelect.value = 'English';
+            }
         }
 
         // Send message functionality
