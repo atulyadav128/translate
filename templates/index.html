@@ -103,10 +103,14 @@
             transition: all 0.3s ease;
             background-color: #1e1e1e;
             color: #ffffff;
-            min-height: 60px;
+            min-height: auto;
+            height: auto;
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            flex-wrap: wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         .mode-card:hover {
             border-color: #1976d2;
@@ -125,6 +129,25 @@
             font-size: 1.5rem;
             color: #1976d2;
             flex-shrink: 0;
+        }
+        
+        /* Responsive font sizing for zoom levels */
+        @media screen and (min-resolution: 150dpi) {
+            .mode-card {
+                font-size: 0.9rem;
+            }
+            .mode-icon {
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media screen and (min-resolution: 200dpi) {
+            .mode-card {
+                font-size: 0.8rem;
+            }
+            .mode-icon {
+                font-size: 1.2rem;
+            }
         }
         .title-section {
             margin-bottom: 1.5rem;
@@ -303,9 +326,13 @@
             .mode-card {
                 flex: 1 !important;
                 min-width: calc(50% - 0.25rem) !important;
-                min-height: 50px !important;
+                min-height: auto !important;
+                height: auto !important;
                 padding: 0.5rem !important;
                 font-size: 0.8rem !important;
+                flex-wrap: wrap !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
             }
         }
     </style>
