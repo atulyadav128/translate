@@ -185,22 +185,11 @@
                             Settings
                         </h3>
                         <div class="field">
-                            <label class="label">Translation Direction</label>
-                            <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select id="translationDirection">
-                                        <option value="to">To Other Languages</option>
-                                        <option value="from">From Other Languages to English</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Target Language</label>
+                            <label class="label">Translation Language</label>
                             <div class="control">
                                 <div class="select is-fullwidth">
                                     <select id="translationLanguage">
-                                        <option value="English">English</option>
+                                        <option value="English">English (from any language)</option>
                                         <option value="Spanish">Spanish</option>
                                         <option value="French">French</option>
                                         <option value="German">German</option>
@@ -301,21 +290,11 @@
             
             // Prepare request data
             const translationLanguage = document.getElementById('translationLanguage').value;
-            let translationDirection = document.getElementById('translationDirection').value;
-            
-            // Auto-set direction based on language selection
-            if (translationLanguage === 'English') {
-                translationDirection = 'from'; // Translate TO English
-            } else if (translationDirection === 'from' && translationLanguage !== 'English') {
-                // If direction is "from" but language is not English, change to "to"
-                translationDirection = 'to';
-            }
             
             const requestData = {
                 mode: currentMode,
                 text: text,
-                language: translationLanguage,
-                direction: translationDirection
+                language: translationLanguage
             };
 
             // Send request
@@ -404,18 +383,6 @@
             }
         });
 
-        // Auto-update translation direction when language changes
-        document.getElementById('translationLanguage').addEventListener('change', function() {
-            const selectedLanguage = this.value;
-            const directionSelect = document.getElementById('translationDirection');
-            
-            if (selectedLanguage === 'English') {
-                directionSelect.value = 'from';
-                directionSelect.disabled = true; // Disable direction selection for English
-            } else {
-                directionSelect.disabled = false; // Re-enable direction selection
-            }
-        });
 
         // Initialize
         updateModeInfo();

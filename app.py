@@ -24,7 +24,6 @@ def generate_response():
         mode = data.get("mode", "default")
         text = data.get("text", "")
         language = data.get("language", "Spanish")
-        direction = data.get("direction", "to")
         
         # Check if API key is available
         if not openai.api_key:
@@ -39,7 +38,7 @@ def generate_response():
 
         # Prompt templates for each mode
         if mode == 'translator':
-            if direction == "from" or language == "English":
+            if language == "English":
                 prompt = f"Translate the following text to English: {text}"
             else:
                 prompt = f"Translate the following text to {language}: {text}"
