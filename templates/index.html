@@ -34,12 +34,26 @@
             background-color: rgba(255, 255, 255, 0.1) !important;
         }
         .chat-container {
-            max-height: 65vh;
+            height: 65vh;
             overflow-y: auto;
             border: 1px solid #444444;
             border-radius: 8px;
             padding: 1rem;
             background-color: #2a2a2a;
+        }
+        .columns {
+            height: 100vh;
+            overflow: hidden;
+        }
+        .column {
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .column.is-6 {
+            overflow-y: auto;
+        }
+        .column.is-3 {
+            overflow-y: visible;
         }
         .message {
             margin-bottom: 1rem;
@@ -835,7 +849,7 @@
                     targetLang = langMap[translationLang] || 'en';
                 }
                 
-                // Find best voice for the target language
+                // Find best voice for the target language, prioritizing male voices
                 const preferredVoices = voices.filter(voice => 
                     voice.lang.startsWith(targetLang) && 
                     (voice.name.includes('Google') || 
@@ -844,14 +858,46 @@
                      voice.name.includes('Enhanced'))
                 );
                 
-                if (preferredVoices.length > 0) {
+                // Prioritize male voices
+                const maleVoices = preferredVoices.filter(voice => 
+                    voice.name.toLowerCase().includes('male') || 
+                    voice.name.toLowerCase().includes('man') ||
+                    voice.name.toLowerCase().includes('david') ||
+                    voice.name.toLowerCase().includes('alex') ||
+                    voice.name.toLowerCase().includes('daniel') ||
+                    voice.name.toLowerCase().includes('mark') ||
+                    voice.name.toLowerCase().includes('paul') ||
+                    voice.name.toLowerCase().includes('steve') ||
+                    voice.name.toLowerCase().includes('tom') ||
+                    voice.name.toLowerCase().includes('mike')
+                );
+                
+                // Return male voice if available, otherwise first preferred voice
+                if (maleVoices.length > 0) {
+                    return maleVoices[0];
+                } else if (preferredVoices.length > 0) {
                     return preferredVoices[0];
                 }
                 
-                // Fallback to any voice in the target language
-                const fallbackVoice = voices.find(voice => voice.lang.startsWith(targetLang));
-                if (fallbackVoice) {
-                    return fallbackVoice;
+                // Fallback to any voice in the target language, prioritizing male voices
+                const fallbackVoices = voices.filter(voice => voice.lang.startsWith(targetLang));
+                const maleFallbackVoices = fallbackVoices.filter(voice => 
+                    voice.name.toLowerCase().includes('male') || 
+                    voice.name.toLowerCase().includes('man') ||
+                    voice.name.toLowerCase().includes('david') ||
+                    voice.name.toLowerCase().includes('alex') ||
+                    voice.name.toLowerCase().includes('daniel') ||
+                    voice.name.toLowerCase().includes('mark') ||
+                    voice.name.toLowerCase().includes('paul') ||
+                    voice.name.toLowerCase().includes('steve') ||
+                    voice.name.toLowerCase().includes('tom') ||
+                    voice.name.toLowerCase().includes('mike')
+                );
+                
+                if (maleFallbackVoices.length > 0) {
+                    return maleFallbackVoices[0];
+                } else if (fallbackVoices.length > 0) {
+                    return fallbackVoices[0];
                 }
                 
                 // Final fallback to English
