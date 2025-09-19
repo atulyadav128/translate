@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AYBot - Personal Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Welcome to AYBot - Your Personal Assistant</h1>
+
+            <p>Select a predefined prompt or enter your own:</p>
+            <!-- Dropdown for predefined prompts -->
+            <div class="select">
+                <select id="predefinedPrompt">
+                    <option value="ask">Ask Anything</option>
+                    <option value="translator">Translator</option>
+                </select>
+            </div>
+            <div id="generalPromptSection">
+                <p>Enter your question or request:</p>
+                <textarea class="textarea" id="prompt" placeholder="Ask AYBot anything..."></textarea>
+            </div>
+            <div id="translatorSection" style="display:none;">
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <p>Enter text to translate:</p>
+                        <textarea class="textarea" id="translateInput" placeholder="Enter text to translate..."></textarea>
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <p>Translated text:</p>
+                        <textarea class="textarea" id="translateOutput" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button class="button is-primary mt-3" id="generateBtn">Generate Response</button>
+
+            <!-- Save Response Button -->
+            <button class="button is-info mt-3 is-hidden" id="saveRapBtn">Save Response</button>
+
+            <!-- Clear Response Button -->
+            <button class="button is-warning mt-3 is-hidden" id="clearRapBtn">Clear Response</button>
+
+            <div id="loading" class="is-hidden">
+                <button class="button is-loading is-large is-primary" disabled>Loading...</button>
+            </div>
+
+            <!-- Notification Section -->
+            <div id="notification" class="notification is-hidden mt-3"></div>
+
+            <div id="responseSection" class="mt-5">
+                <h2 class="subtitle">AYBot's Response:</h2>
+                <pre id="responseOutput"></pre>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script>
+        document.getElementById("generateBtn").addEventListener("click", function() {
+            const predefinedPrompt = document.getElementById("predefinedPrompt").value;
+            const notification = document.getElementById("notification");
+            const saveResponseBtn = document.getElementById("saveRapBtn");
+            const clearResponseBtn = document.getElementById("clearRapBtn");
+            const loading = document.getElementById("loading");
+
+            if (predefinedPrompt === "translator") {
+                const translateInput = document.getElementById("translateInput").value;
+                if (!translateInput) {
+                    notification.className = "notification is-danger";
+                    notification.textContent = "Please enter text to translate.";
+                    notification.classList.remove("is-hidden");
+                    return;
+                }
+                loading.classList.remove("is-hidden");
+                axios.post('/generate_response', { mode: 'translator', text: translateInput, language: 'Spanish' })
+                    .then(response => {
+                        const responseText = response.data.response_text;
+                        document.getElementById("translateOutput").value = responseText;
+                        notification.className = "notification is-success";
+                        notification.textContent = "Translation generated successfully!";
+                        notification.classList.remove("is-hidden");
+                        loading.classList.add("is-hidden");
+                        saveResponseBtn.classList.add("is-hidden");
+                        clearResponseBtn.classList.add("is-hidden");
+                    })
+                    .catch(error => {
+                        document.getElementById("translateOutput").value = "Error generating translation. Please try again.";
+                        notification.className = "notification is-danger";
+                        notification.textContent = "Error generating translation. Please try again.";
+                        notification.classList.remove("is-hidden");
+                        loading.classList.add("is-hidden");
+                        saveResponseBtn.classList.add("is-hidden");
+                        clearResponseBtn.classList.add("is-hidden");
+                    });
+                return;
+            }
+            // Ask Anything mode
+            const userPrompt = document.getElementById("prompt").value;
+            if (!userPrompt) {
+                notification.className = "notification is-danger";
+                notification.textContent = "Please enter a prompt.";
+                notification.classList.remove("is-hidden");
+                loading.classList.add("is-hidden");
+                return;
+            }
+            loading.classList.remove("is-hidden");
+            axios.post('/generate_response', { mode: 'default', text: userPrompt })
+                .then(response => {
+                    const responseText = response.data.response_text;
+                    if (responseText.endsWith("...")) {
+                        document.getElementById("responseOutput").textContent = responseText + "\n\n[Note: The response may have been truncated. Try again with a shorter prompt.]";
+                    } else {
+                        document.getElementById("responseOutput").textContent = responseText;
+                    }
+                    notification.className = "notification is-success";
+                    notification.textContent = "Response generated successfully!";
+                    notification.classList.remove("is-hidden");
+                    saveResponseBtn.classList.remove("is-hidden");
+                    clearResponseBtn.classList.remove("is-hidden");
+                    loading.classList.add("is-hidden");
+                    saveResponseBtn.onclick = function() {
+                        const blob = new Blob([responseText], { type: 'text/plain' });
+                        const link = document.createElement('a');
+                        link.href = URL.createObjectURL(blob);
+                        link.download = 'aybot_response.txt';
+                        link.click();
+                    };
+                })
+                .catch(error => {
+                    document.getElementById("responseOutput").textContent = "Error generating response. Please try again.";
+                    notification.className = "notification is-danger";
+                    notification.textContent = "Error generating response. Please try again.";
+                    notification.classList.remove("is-hidden");
+                    loading.classList.add("is-hidden");
+                    saveResponseBtn.classList.add("is-hidden");
+                    clearResponseBtn.classList.add("is-hidden");
+                });
+        });
+        // Clear the response and reset the inputs
+        document.getElementById("clearRapBtn").addEventListener("click", function() {
+        document.getElementById("responseOutput").textContent = "";
+        document.getElementById("prompt").value = "";
+        document.getElementById("predefinedPrompt").value = "";
+        document.getElementById("saveRapBtn").classList.add("is-hidden");
+        document.getElementById("clearRapBtn").classList.add("is-hidden");
+        document.getElementById("notification").classList.add("is-hidden");
+
+        //console.log("Cleared rap output and reset inputs.");
+    });
+        document.getElementById("predefinedPrompt").addEventListener("change", function() {
+            const selected = this.value;
+            // Clear outputs when switching modes
+            document.getElementById("responseOutput").textContent = "";
+            document.getElementById("translateOutput").value = "";
+            document.getElementById("notification").classList.add("is-hidden");
+            if (selected === "translator") {
+                document.getElementById("generalPromptSection").style.display = "none";
+                document.getElementById("translatorSection").style.display = "block";
+                document.getElementById("responseSection").style.display = "none";
+            } else {
+                document.getElementById("generalPromptSection").style.display = "block";
+                document.getElementById("translatorSection").style.display = "none";
+                document.getElementById("responseSection").style.display = "block";
+            }
+        });
+    </script>
+</body>
+</html>
