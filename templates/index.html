@@ -1011,27 +1011,37 @@
             if (isPWA) {
                 document.body.classList.add('mobile-layout');
                 
-                // Force CSS changes directly
+                // Force CSS changes directly - HORIZONTAL layout
                 const columns = document.querySelector('.columns');
                 if (columns) {
-                    columns.style.display = 'block';
-                    columns.style.flexDirection = 'column';
-                    columns.style.height = 'auto';
+                    columns.style.display = 'flex';
+                    columns.style.flexDirection = 'row';
+                    columns.style.height = '100vh';
+                    columns.style.overflow = 'hidden';
                 }
                 
-                const allColumns = document.querySelectorAll('.column');
-                allColumns.forEach(col => {
-                    col.style.display = 'block';
-                    col.style.width = '100%';
-                    col.style.height = 'auto';
-                    col.style.overflowY = 'visible';
-                    col.style.marginBottom = '1rem';
-                });
+                // Set left sidebar (modes) to 20%
+                const leftColumn = document.querySelector('.column.is-2');
+                if (leftColumn) {
+                    leftColumn.style.width = '20%';
+                    leftColumn.style.height = '100vh';
+                    leftColumn.style.overflowY = 'auto';
+                    leftColumn.style.marginBottom = '0';
+                }
+                
+                // Set chat area to 80%
+                const chatColumn = document.querySelector('.column.is-10');
+                if (chatColumn) {
+                    chatColumn.style.width = '80%';
+                    chatColumn.style.height = '100vh';
+                    chatColumn.style.overflowY = 'auto';
+                    chatColumn.style.marginBottom = '0';
+                }
                 
                 const chatContainer = document.querySelector('.chat-container');
                 if (chatContainer) {
-                    chatContainer.style.height = '50vh';
-                    chatContainer.style.marginBottom = '1rem';
+                    chatContainer.style.height = '75vh';
+                    chatContainer.style.marginBottom = '0';
                 }
             }
         }
