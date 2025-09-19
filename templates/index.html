@@ -508,11 +508,29 @@
         document.getElementById('speakBtn').addEventListener('click', function() {
             const lastBotMessage = document.querySelector('.bot-message:last-child');
             if (lastBotMessage) {
-                const text = lastBotMessage.querySelector('div:not(.is-size-7)').textContent;
-                if (speechSynthesis.speaking) {
-                    stopSpeech();
+                // Get only the response content, excluding "AYBot:" and timestamp
+                const contentDiv = lastBotMessage.querySelector('.content');
+                const textNodes = Array.from(contentDiv.childNodes).filter(node => 
+                    node.nodeType === Node.TEXT_NODE && node.textContent.trim()
+                );
+                
+                // Find the main content div (the one that's not the timestamp)
+                const mainContentDiv = contentDiv.querySelector('div:not(.is-size-7)');
+                let textToSpeak = '';
+                
+                if (mainContentDiv) {
+                    // Extract only the text content, removing "AYBot:" prefix
+                    textToSpeak = mainContentDiv.textContent.replace(/^AYBot:\s*/, '').trim();
+                }
+                
+                if (textToSpeak) {
+                    if (speechSynthesis.speaking) {
+                        stopSpeech();
+                    } else {
+                        speakText(textToSpeak);
+                    }
                 } else {
-                    speakText(text);
+                    showNotification('No response content to speak', 'warning');
                 }
             } else {
                 showNotification('No response to speak', 'warning');
