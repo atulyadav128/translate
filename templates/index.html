@@ -94,47 +94,30 @@
             border: 1px solid #1565c0;
             box-shadow: 0 2px 4px rgba(25,118,210,0.3);
         }
-        .mode-selector {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
+        /* Tab styling */
+        .tabs {
+            margin-bottom: 2rem;
         }
-        .mode-card {
-            padding: 0.75rem;
-            border: 2px solid #333333;
-            border-radius: 12px;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background-color: #1e1e1e;
+        .tabs ul {
+            border-bottom-color: #333333;
+        }
+        .tabs li a {
             color: #ffffff;
-            min-height: auto;
-            height: auto;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
+            border-color: #333333;
+            background-color: #1e1e1e;
         }
-        .mode-card:hover {
+        .tabs li a:hover {
+            color: #1976d2;
             border-color: #1976d2;
             background-color: #2d2d2d;
-            transform: translateX(3px);
-            box-shadow: 0 4px 12px rgba(25,118,210,0.15);
         }
-        .mode-card.active {
+        .tabs li.is-active a {
+            color: #1976d2;
             border-color: #1976d2;
             background-color: #1a237e;
-            transform: translateX(3px);
-            box-shadow: 0 6px 20px rgba(25,118,210,0.25);
-            border-left: 4px solid #1976d2;
         }
-        .mode-icon {
-            font-size: 1.5rem;
-            color: #1976d2;
-            flex-shrink: 0;
+        .tabs li a i {
+            margin-right: 0.5rem;
         }
         
         /* Responsive font sizing for zoom levels */
@@ -338,44 +321,39 @@
             margin-bottom: 1rem;
         }
         
-        /* Ultra-simple mobile layout */
+        /* Mobile tabs layout */
         @media screen and (max-width: 1200px) {
-            .columns {
-                display: block !important;
-                height: auto !important;
-                overflow: visible !important;
+            .tabs ul {
+                flex-wrap: wrap !important;
+                justify-content: center !important;
             }
-            .column {
-                width: 100% !important;
-                height: auto !important;
-                margin-bottom: 1rem !important;
-                overflow: visible !important;
+            .tabs li {
+                flex: 1 !important;
+                min-width: calc(50% - 0.25rem) !important;
+                margin-bottom: 0.5rem !important;
             }
-            .chat-container {
-                height: 50vh !important;
-                max-height: 50vh !important;
-                margin-bottom: 1rem !important;
-                overflow-y: auto !important;
-                overflow-x: hidden !important;
-            }
-            .mode-selector {
-                display: grid !important;
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 0.5rem !important;
-            }
-            .mode-card {
-                min-height: 60px !important;
-                padding: 0.75rem !important;
-                font-size: 0.9rem !important;
+            .tabs li a {
+                padding: 0.75rem 0.5rem !important;
+                font-size: 0.8rem !important;
                 text-align: center !important;
                 display: flex !important;
                 flex-direction: column !important;
                 align-items: center !important;
-                justify-content: center !important;
                 gap: 0.25rem !important;
             }
-            .mode-icon {
+            .tabs li a i {
+                margin-right: 0 !important;
                 font-size: 1.2rem !important;
+            }
+            .tabs li a span {
+                font-size: 0.7rem !important;
+            }
+            .chat-container {
+                height: 60vh !important;
+                max-height: 60vh !important;
+                margin-bottom: 1rem !important;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
             }
             .button {
                 min-height: 44px !important;
@@ -399,61 +377,45 @@
 
     <section class="section">
         <div class="container">
-            <div class="columns">
-                <!-- AI Modes Sidebar -->
-                <div class="column is-2">
-                    <div class="box">
-                        <h3 class="title is-5 section-title">
-                            <i class="fas fa-tools"></i>
-                            AI Modes
-                        </h3>
-                        <div class="mode-selector" id="modeSelector">
-                            <div class="mode-card active" data-mode="default">
-                                <div class="mode-icon"><i class="fas fa-question-circle"></i></div>
-                                <div>Ask Anything</div>
-                            </div>
-                            <div class="mode-card" data-mode="translator">
-                                <div class="mode-icon"><i class="fas fa-language"></i></div>
-                                <div>Translator</div>
-                            </div>
-                            <div class="mode-card" data-mode="weather">
-                                <div class="mode-icon"><i class="fas fa-cloud-sun"></i></div>
-                                <div>Weather</div>
-                            </div>
-                            <div class="mode-card" data-mode="news">
-                                <div class="mode-icon"><i class="fas fa-newspaper"></i></div>
-                                <div>News</div>
-                            </div>
-                            <div class="mode-card" data-mode="finance">
-                                <div class="mode-icon"><i class="fas fa-chart-line"></i></div>
-                                <div>Finance</div>
-                            </div>
-                            <div class="mode-card" data-mode="code_helper">
-                                <div class="mode-icon"><i class="fas fa-code"></i></div>
-                                <div>Code Helper</div>
-                            </div>
-                            <div class="mode-card" data-mode="study_buddy">
-                                <div class="mode-icon"><i class="fas fa-graduation-cap"></i></div>
-                                <div>Study Buddy</div>
-                            </div>
-                            <div class="mode-card" data-mode="creative_writer">
-                                <div class="mode-icon"><i class="fas fa-pen-fancy"></i></div>
-                                <div>Creative Writer</div>
-                            </div>
-                            <div class="mode-card" data-mode="health_advisor">
-                                <div class="mode-icon"><i class="fas fa-heartbeat"></i></div>
-                                <div>Health Advisor</div>
-                            </div>
-                            <div class="mode-card" data-mode="travel_guide">
-                                <div class="mode-icon"><i class="fas fa-map-marked-alt"></i></div>
-                                <div>Travel Guide</div>
-                            </div>
-                        </div>
-            </div>
+            <!-- Mode Tabs -->
+            <div class="tabs is-centered is-boxed">
+                <ul id="modeTabs">
+                    <li class="is-active" data-mode="default">
+                        <a><i class="fas fa-question-circle"></i><span>Ask</span></a>
+                    </li>
+                    <li data-mode="translator">
+                        <a><i class="fas fa-language"></i><span>Translate</span></a>
+                    </li>
+                    <li data-mode="weather">
+                        <a><i class="fas fa-cloud-sun"></i><span>Weather</span></a>
+                    </li>
+                    <li data-mode="news">
+                        <a><i class="fas fa-newspaper"></i><span>News</span></a>
+                    </li>
+                    <li data-mode="finance">
+                        <a><i class="fas fa-chart-line"></i><span>Finance</span></a>
+                    </li>
+                    <li data-mode="code_helper">
+                        <a><i class="fas fa-code"></i><span>Code</span></a>
+                    </li>
+                    <li data-mode="study_buddy">
+                        <a><i class="fas fa-graduation-cap"></i><span>Study</span></a>
+                    </li>
+                    <li data-mode="creative_writer">
+                        <a><i class="fas fa-pen-fancy"></i><span>Write</span></a>
+                    </li>
+                    <li data-mode="health_advisor">
+                        <a><i class="fas fa-heartbeat"></i><span>Health</span></a>
+                    </li>
+                    <li data-mode="travel_guide">
+                        <a><i class="fas fa-map-marked-alt"></i><span>Travel</span></a>
+                    </li>
+                </ul>
             </div>
 
-                <!-- Main Chat Area -->
-                <div class="column is-10">
+            <!-- Main Chat Area -->
+            <div class="columns">
+                <div class="column is-12">
                     <div class="title-section">
                         <h1 class="title is-4 section-title">
                             <i class="fas fa-tools"></i>
@@ -550,11 +512,11 @@
         let isListening = false;
         let speechSynthesis = window.speechSynthesis;
 
-        // Mode selector functionality
-        document.querySelectorAll('.mode-card').forEach(card => {
-            card.addEventListener('click', function() {
-                document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
-                this.classList.add('active');
+        // Mode tabs functionality
+        document.querySelectorAll('#modeTabs li').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('#modeTabs li').forEach(t => t.classList.remove('is-active'));
+                this.classList.add('is-active');
                 currentMode = this.dataset.mode;
                 updateModeInfo();
             });
