@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 import openai
 import os
 from dotenv import load_dotenv
@@ -15,6 +15,15 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return render_template('index.html')
+
+# PWA Routes
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory('.', 'manifest.json')
+
+@app.route('/sw.js')
+def service_worker():
+    return send_from_directory('.', 'sw.js')
 
 # Route for generating a response using OpenAI
 @app.route('/generate_response', methods=['POST'])
