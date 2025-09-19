@@ -4,8 +4,8 @@
   "description": "AYAI Central - AYTool personal AI assistant with voice features",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#007BFF",
+  "background_color": "#121212",
+  "theme_color": "#1976d2",
   "orientation": "portrait-primary",
   "icons": [
     {

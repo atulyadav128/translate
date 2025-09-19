@@ -1,9 +1,9 @@
-// Service Worker for AYBot PWA
-const CACHE_NAME = 'aybot-v1';
+// Service Worker for AYAI Central PWA
+const CACHE_NAME = 'ayai-central-v2';
 const urlsToCache = [
   '/',
-  '/static/css/style.css',
-  '/static/js/app.js'
+  '/manifest.json',
+  '/sw.js'
 ];
 
 // Install event
