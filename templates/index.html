@@ -419,12 +419,15 @@
                     }
                 })
                 .catch(error => {
+                    console.error('API Error:', error);
+                    const errorMessage = error.response?.data?.error || error.message || 'Unknown error occurred';
+                    
                     if (currentMode === 'translator') {
-                        document.getElementById('translatedText').value = 'Error generating translation. Please try again.';
-                        showNotification('Error generating translation', 'danger');
+                        document.getElementById('translatedText').value = `Error: ${errorMessage}`;
+                        showNotification(`Translation error: ${errorMessage}`, 'danger');
                     } else {
-                        addMessageToChat('Sorry, I encountered an error. Please try again.', 'bot');
-                        showNotification('Error generating response', 'danger');
+                        addMessageToChat(`Sorry, I encountered an error: ${errorMessage}`, 'bot');
+                        showNotification(`Error: ${errorMessage}`, 'danger');
                     }
                 })
                 .finally(() => {

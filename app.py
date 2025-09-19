@@ -61,7 +61,7 @@ def generate_response():
 
         # Call the OpenAI Chat API (for openai>=1.0.0)
         response = openai.chat.completions.create(
-            model="gpt-5-mini",
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are AYBot, a helpful personal assistant."},
                 {"role": "user", "content": prompt},
