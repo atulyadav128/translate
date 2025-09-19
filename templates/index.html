@@ -127,11 +127,11 @@
                         <div class="mode-card" data-mode="health_advisor">
                             <div class="mode-icon"><i class="fas fa-heartbeat"></i></div>
                             <div>Health Advisor</div>
-                        </div>
+            </div>
                         <div class="mode-card" data-mode="travel_guide">
                             <div class="mode-icon"><i class="fas fa-map-marked-alt"></i></div>
                             <div>Travel Guide</div>
-                        </div>
+            </div>
                     </div>
 
                     <!-- Chat History -->
@@ -139,9 +139,9 @@
                         <div class="message bot-message">
                             <div class="content">
                                 <strong>AYBot:</strong> Hello! I'm your personal AI assistant. Choose a mode above and start chatting with me!
-                            </div>
-                        </div>
                     </div>
+                </div>
+            </div>
 
                     <!-- Input Area -->
                     <div class="field has-addons">
@@ -212,7 +212,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+            </div>
 
                     <div class="box">
                         <h3 class="title is-5">
@@ -223,6 +223,14 @@
                             <p class="is-size-7 has-text-success">
                                 <strong>✅ AYBot is running!</strong> All features are working properly.
                             </p>
+                            <div class="mt-3">
+                                <h4 class="is-size-6 has-text-weight-bold">🎤 Voice Features</h4>
+                                <p class="is-size-7">
+                                    <strong>Voice Input:</strong> Click the microphone button to speak your message.<br>
+                                    <strong>Voice Output:</strong> Click "Speak Response" to hear responses.<br>
+                                    <em>Note: Allow microphone access when prompted by your browser.</em>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -415,7 +423,18 @@
                 
                 recognition.onerror = function(event) {
                     console.error('Speech recognition error:', event.error);
-                    showNotification(`Speech recognition error: ${event.error}`, 'danger');
+                    let errorMessage = `Speech recognition error: ${event.error}`;
+                    
+                    // Provide specific guidance for common errors
+                    if (event.error === 'not-allowed') {
+                        errorMessage += '. Please allow microphone access in your browser settings.';
+                    } else if (event.error === 'no-speech') {
+                        errorMessage += '. No speech was detected. Please try again.';
+                    } else if (event.error === 'network') {
+                        errorMessage += '. Network error. Please check your internet connection.';
+                    }
+                    
+                    showNotification(errorMessage, 'danger');
                 };
                 
                 recognition.onend = function() {
