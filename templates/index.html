@@ -321,9 +321,14 @@
             const timestamp = new Date().toLocaleTimeString();
             const modeBadge = sender === 'user' ? `<span class="mode-badge">${currentMode}</span>` : '';
             
+            // Add special indicator for translation mode
+            const translationIndicator = (currentMode === 'translator' && sender === 'bot') ? 
+                '<div class="is-size-7 has-text-info mb-2"><i class="fas fa-language"></i> Translation Result</div>' : '';
+            
             messageDiv.innerHTML = `
                 <div class="content">
                     <strong>${sender === 'user' ? 'You' : 'AYBot'}:</strong> ${modeBadge}
+                    ${translationIndicator}
                     <div class="mt-2">${text}</div>
                     <div class="is-size-7 has-text-grey mt-1">${timestamp}</div>
                 </div>
