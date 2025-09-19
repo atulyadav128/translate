@@ -501,10 +501,10 @@
                 utterance.volume = 0.9;  // Higher volume for better clarity
                 
                 // Use the selected voice
-                const selectedVoice = getSelectedVoice();
+                const selectedVoice = getSelectedVoice(text);
                 if (selectedVoice) {
                     utterance.voice = selectedVoice;
-                    console.log('Using voice:', selectedVoice.name);
+                    console.log('Using voice:', selectedVoice.name, 'for language:', selectedVoice.lang);
                 }
                 
                 utterance.onstart = function() {
@@ -555,10 +555,10 @@
                 utterance.volume = 0.9;  // Higher volume for better clarity
                 
                 // Use the selected voice
-                const selectedVoice = getSelectedVoice();
+                const selectedVoice = getSelectedVoice(responseText);
                 if (selectedVoice) {
                     utterance.voice = selectedVoice;
-                    console.log('Using voice:', selectedVoice.name);
+                    console.log('Using voice:', selectedVoice.name, 'for language:', selectedVoice.lang);
                 }
                 
                 utterance.onstart = function() {
@@ -638,9 +638,15 @@
                 // Clear existing options except the first one
                 voiceSelect.innerHTML = '<option value="auto">Auto (Best Available)</option>';
                 
-                // Add available voices
+                // Add available voices for multiple languages
                 voices.forEach((voice, index) => {
-                    if (voice.lang.startsWith('en')) {
+                    // Include English, Hindi, Spanish, and other common languages
+                    if (voice.lang.startsWith('en') || voice.lang.startsWith('hi') || 
+                        voice.lang.startsWith('es') || voice.lang.startsWith('fr') || 
+                        voice.lang.startsWith('de') || voice.lang.startsWith('it') ||
+                        voice.lang.startsWith('pt') || voice.lang.startsWith('zh') ||
+                        voice.lang.startsWith('ja') || voice.lang.startsWith('ko') ||
+                        voice.lang.startsWith('ar') || voice.lang.startsWith('ru')) {
                         const option = document.createElement('option');
                         option.value = index;
                         option.textContent = `${voice.name} (${voice.lang})`;
@@ -662,21 +668,58 @@
         }
 
         // Get selected voice
-        function getSelectedVoice() {
+        function getSelectedVoice(text = '') {
             const voiceSelect = document.getElementById('voiceSelection');
             const voices = speechSynthesis.getVoices();
             
             if (voiceSelect.value === 'auto') {
-                // Use the improved voice selection logic
+                // Detect language from text or use current translation language
+                let targetLang = 'en';
+                
+                // Check if text contains Hindi characters (Devanagari script)
+                if (/[\u0900-\u097F]/.test(text)) {
+                    targetLang = 'hi';
+                } else {
+                    // Check current translation language setting
+                    const translationLang = document.getElementById('translationLanguage').value;
+                    const langMap = {
+                        'English': 'en',
+                        'Hindi': 'hi',
+                        'Spanish': 'es',
+                        'French': 'fr',
+                        'German': 'de',
+                        'Italian': 'it',
+                        'Portuguese': 'pt',
+                        'Chinese': 'zh',
+                        'Japanese': 'ja',
+                        'Korean': 'ko',
+                        'Arabic': 'ar',
+                        'Russian': 'ru'
+                    };
+                    targetLang = langMap[translationLang] || 'en';
+                }
+                
+                // Find best voice for the target language
                 const preferredVoices = voices.filter(voice => 
-                    voice.lang.startsWith('en') && 
+                    voice.lang.startsWith(targetLang) && 
                     (voice.name.includes('Google') || 
                      voice.name.includes('Microsoft') || 
                      voice.name.includes('Natural') ||
                      voice.name.includes('Enhanced'))
                 );
                 
-                return preferredVoices.length > 0 ? preferredVoices[0] : voices.find(voice => voice.lang.startsWith('en'));
+                if (preferredVoices.length > 0) {
+                    return preferredVoices[0];
+                }
+                
+                // Fallback to any voice in the target language
+                const fallbackVoice = voices.find(voice => voice.lang.startsWith(targetLang));
+                if (fallbackVoice) {
+                    return fallbackVoice;
+                }
+                
+                // Final fallback to English
+                return voices.find(voice => voice.lang.startsWith('en'));
             } else {
                 const voiceIndex = parseInt(voiceSelect.value);
                 return voices[voiceIndex] || voices.find(voice => voice.lang.startsWith('en'));
