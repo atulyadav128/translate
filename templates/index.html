@@ -171,12 +171,39 @@
                         <div class="mode-card" data-mode="health_advisor">
                             <div class="mode-icon"><i class="fas fa-heartbeat"></i></div>
                             <div>Health Advisor</div>
-                        </div>
+            </div>
                         <div class="mode-card" data-mode="travel_guide">
                             <div class="mode-icon"><i class="fas fa-map-marked-alt"></i></div>
                             <div>Travel Guide</div>
-                        </div>
+            </div>
                     </div>
+
+                    <!-- Translation Section (hidden by default) -->
+                    <div class="box is-hidden" id="translationBox">
+                        <h3 class="title is-6">
+                            <i class="fas fa-language"></i>
+                            Translation Result
+                        </h3>
+                        <div class="field">
+                            <label class="label">Original Text:</label>
+                            <div class="control">
+                                <textarea class="textarea" id="originalText" readonly></textarea>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Translated Text:</label>
+                            <div class="control">
+                                <textarea class="textarea" id="translatedText" readonly></textarea>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-info" id="copyTranslation">
+                                    <i class="fas fa-copy"></i> Copy Translation
+                                </button>
+                    </div>
+                </div>
+            </div>
 
                     <!-- Chat History -->
                     <div class="chat-container" id="chatContainer">
@@ -224,7 +251,7 @@
                             <p><strong>Ask Anything</strong></p>
                             <p class="is-size-7">Ask me anything and I'll do my best to help you!</p>
                         </div>
-                    </div>
+            </div>
 
                     <div class="box">
                         <h3 class="title is-5">
@@ -333,6 +360,20 @@
                 <p><strong>${info.name}</strong></p>
                 <p class="is-size-7">${info.desc}</p>
             `;
+
+            // Show/hide translation box based on mode
+            const translationBox = document.getElementById('translationBox');
+            const chatContainer = document.getElementById('chatContainer');
+            
+            if (currentMode === 'translator') {
+                translationBox.classList.remove('is-hidden');
+                chatContainer.style.display = 'none';
+                document.getElementById('userInput').placeholder = 'Enter text to translate...';
+            } else {
+                translationBox.classList.add('is-hidden');
+                chatContainer.style.display = 'block';
+                document.getElementById('userInput').placeholder = 'Type your message here...';
+            }
         }
 
         // Send message functionality
@@ -363,14 +404,28 @@
             axios.post('/generate_response', requestData)
                 .then(response => {
                     const responseText = response.data.response_text;
-                    addMessageToChat(responseText, 'bot');
-                    messageCount += 2; // user + bot message
-                    updateStats();
-                    showNotification('Response generated successfully!', 'success');
+                    
+                    if (currentMode === 'translator') {
+                        // Handle translation mode specially
+                        document.getElementById('originalText').value = text;
+                        document.getElementById('translatedText').value = responseText;
+                        showNotification('Translation completed!', 'success');
+                    } else {
+                        // Handle other modes normally
+                        addMessageToChat(responseText, 'bot');
+                        messageCount += 2; // user + bot message
+                        updateStats();
+                        showNotification('Response generated successfully!', 'success');
+                    }
                 })
                 .catch(error => {
-                    addMessageToChat('Sorry, I encountered an error. Please try again.', 'bot');
-                    showNotification('Error generating response', 'danger');
+                    if (currentMode === 'translator') {
+                        document.getElementById('translatedText').value = 'Error generating translation. Please try again.';
+                        showNotification('Error generating translation', 'danger');
+                    } else {
+                        addMessageToChat('Sorry, I encountered an error. Please try again.', 'bot');
+                        showNotification('Error generating response', 'danger');
+                    }
                 })
                 .finally(() => {
                     document.getElementById('loadingModal').classList.remove('is-active');
@@ -509,6 +564,17 @@
                         updateStats();
                         showNotification('History cleared!', 'success');
                     });
+            }
+        });
+
+        // Copy translation functionality
+        document.getElementById('copyTranslation').addEventListener('click', function() {
+            const translatedText = document.getElementById('translatedText').value;
+            if (translatedText) {
+                navigator.clipboard.writeText(translatedText);
+                showNotification('Translation copied to clipboard!', 'success');
+            } else {
+                showNotification('No translation to copy', 'warning');
             }
         });
 
