@@ -338,7 +338,7 @@
             margin-bottom: 1rem;
         }
         
-        /* Simple mobile layout */
+        /* Optimized mobile layout */
         @media screen and (max-width: 1200px) {
             .columns {
                 display: block !important;
@@ -374,11 +374,26 @@
                 min-width: calc(50% - 0.25rem) !important;
                 min-height: auto !important;
                 height: auto !important;
-                padding: 0.5rem !important;
-                font-size: 0.8rem !important;
+                padding: 0.75rem !important;
+                font-size: 0.9rem !important;
                 flex-wrap: wrap !important;
                 word-wrap: break-word !important;
                 overflow-wrap: break-word !important;
+                touch-action: manipulation !important;
+            }
+            .mode-card:hover {
+                transform: none !important;
+            }
+            .mode-card:active {
+                transform: scale(0.98) !important;
+                background-color: #1a237e !important;
+            }
+            .button {
+                min-height: 44px !important;
+                touch-action: manipulation !important;
+            }
+            .textarea {
+                font-size: 16px !important;
             }
         }
     </style>
