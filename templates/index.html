@@ -324,19 +324,19 @@
                 overflow: hidden !important;
             }
             .column.is-2 {
-                width: 25% !important;
+                width: 20% !important;
                 height: 100vh !important;
                 overflow-y: auto !important;
                 margin-bottom: 0 !important;
             }
-            .column.is-8 {
-                width: 75% !important;
+            .column.is-10 {
+                width: 80% !important;
                 height: 100vh !important;
                 overflow-y: auto !important;
                 margin-bottom: 0 !important;
             }
             .chat-container {
-                height: 70vh !important;
+                height: 75vh !important;
                 margin-bottom: 0 !important;
             }
             .mode-selector {
@@ -417,7 +417,7 @@
             </div>
 
                 <!-- Main Chat Area -->
-                <div class="column is-8">
+                <div class="column is-10">
                     <div class="title-section">
                         <h1 class="title is-4 section-title">
                             <i class="fas fa-tools"></i>
@@ -463,79 +463,30 @@
                             <i class="fas fa-volume-up"></i>
                         </button>
                     </div>
-                </div>
-
-                <!-- Sidebar -->
-                <div class="column is-2">
-                    <div class="box" style="display: none;">
-                        <h3 class="title is-5 section-title">
-                            <i class="fas fa-info-circle"></i>
-                            Current Mode
-                        </h3>
-                        <div id="currentModeInfo">
-                            <p><strong>Ask Anything</strong></p>
-                            <p class="is-size-7">Ask me anything and I'll do my best to help you!</p>
-                        </div>
-                    </div>
-
-                    <div class="box" style="display: none;">
-                        <h3 class="title is-5 section-title">
-                            <i class="fas fa-cog"></i>
-                            Settings
-                        </h3>
-                        <div class="field">
-                            <label class="label">Translation Language</label>
-                            <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select id="translationLanguage">
-                                        <option value="English" selected>English</option>
-                                        <option value="Spanish">Spanish</option>
-                                        <option value="Hindi">Hindi</option>
-                                        <option value="French">French</option>
-                                        <option value="German">German</option>
-                                        <option value="Italian">Italian</option>
-                                        <option value="Portuguese">Portuguese</option>
-                                        <option value="Chinese">Chinese</option>
-                                        <option value="Japanese">Japanese</option>
-                                        <option value="Korean">Korean</option>
-                                        <option value="Arabic">Arabic</option>
-                                        <option value="Russian">Russian</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="field">
-                            <label class="label">Voice Selection</label>
-                            <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select id="voiceSelection">
-                                        <option value="auto">Auto (Best Available)</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
             </div>
 
-                    <div class="box" style="display: none;">
-                        <h3 class="title is-5 section-title">
-                            <i class="fas fa-check-circle"></i>
-                            Status
-                        </h3>
-                        <div class="content">
-                            <p class="is-size-7 has-text-success">
-                                <strong>✅ AYTool is running!</strong> All features are working properly.
-                            </p>
-                            <div class="mt-3">
-                                <h4 class="is-size-6 has-text-weight-bold">🎤 Voice Features</h4>
-                                <p class="is-size-7">
-                                    <strong>Voice Input:</strong> Click the microphone button to speak your message.<br>
-                                    <strong>Auto-Speak:</strong> Responses are automatically spoken aloud.<br>
-                                    <strong>Manual Speak:</strong> Click "Speak Response" to replay.<br>
-                                    <em>Note: Allow microphone access when prompted by your browser.</em>
-                                </p>
-                            </div>
-                        </div>
+                <!-- Hidden Settings (for functionality) -->
+                <div style="display: none;">
+                    <select id="translationLanguage">
+                        <option value="English" selected>English</option>
+                        <option value="Spanish">Spanish</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="French">French</option>
+                        <option value="German">German</option>
+                        <option value="Italian">Italian</option>
+                        <option value="Portuguese">Portuguese</option>
+                        <option value="Chinese">Chinese</option>
+                        <option value="Japanese">Japanese</option>
+                        <option value="Korean">Korean</option>
+                        <option value="Arabic">Arabic</option>
+                        <option value="Russian">Russian</option>
+                    </select>
+                    <select id="voiceSelection">
+                        <option value="auto">Auto (Best Available)</option>
+                    </select>
+                    <div id="currentModeInfo">
+                        <p><strong>Ask Anything</strong></p>
+                        <p class="is-size-7">Ask me anything and I'll do my best to help you!</p>
                     </div>
                 </div>
             </div>
