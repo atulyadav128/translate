@@ -73,7 +73,7 @@
             margin-right: 20%;
             border-radius: 18px 18px 18px 4px;
         }
-        .bot-message .content div:not(.is-size-7) {
+        .bot-message .content div:not(.is-size-7):not(.mode-badge) {
             color: #4A90E2 !important;
         }
         .mode-badge {
@@ -331,7 +331,7 @@
                     <div class="chat-container" id="chatContainer">
                         <div class="message bot-message">
                             <div class="content">
-                                <strong><span style="color: #4A90E2 !important;">AYTool</span>:</strong><br><span style="margin-top: 0.5rem; display: block;">Hello! I'm your personal AI assistant. Choose a mode and start chatting with me!</span>
+                                <strong><span style="color: #4A90E2 !important;">AYTool</span></strong><br><span style="margin-top: 0.5rem; display: block;">Hello! I'm your personal AI assistant. Choose a mode and start chatting with me!</span>
                     </div>
                 </div>
             </div>
@@ -342,12 +342,12 @@
                             <textarea class="textarea" id="userInput" placeholder="Type your message here or use voice input..." rows="2"></textarea>
                         </div>
                         <div class="control">
-                            <button class="button" id="micBtn" title="Voice Input" style="background-color: #1976d2; color: white;">
+                            <button class="button" id="micBtn" title="Voice Input" style="background-color: #1976d2; color: white; height: 100%;">
                                 <i class="fas fa-microphone"></i>
                             </button>
                         </div>
                         <div class="control">
-                            <button class="button" id="sendBtn" style="background-color: #1976d2; color: white;">
+                            <button class="button" id="sendBtn" style="background-color: #1976d2; color: white; height: 100%;">
                                 <i class="fas fa-paper-plane"></i>
                             </button>
                         </div>
@@ -567,7 +567,7 @@
             
             messageDiv.innerHTML = `
                 <div class="content">
-                    <strong>${sender === 'user' ? 'You' : '<span style="color: #4A90E2 !important;">AYTool</span>'}:</strong> ${modeBadge}
+                    <strong>${sender === 'user' ? 'You' : '<span style="color: #4A90E2 !important;">AYTool</span>'}</strong> ${modeBadge}
                     <div class="mt-2" style="margin-top: 0.5rem !important;">${text}</div>
                     <div class="is-size-7 has-text-grey mt-1">${timestamp}</div>
                 </div>
@@ -602,7 +602,7 @@
             document.getElementById('chatContainer').innerHTML = `
                 <div class="message bot-message">
                     <div class="content">
-                        <strong><span style="color: #4A90E2 !important;">AYTool</span>:</strong><br><span style="margin-top: 0.5rem; display: block;">Chat cleared! How can I help you today?</span>
+                        <strong><span style="color: #4A90E2 !important;">AYTool</span></strong><br><span style="margin-top: 0.5rem; display: block;">Chat cleared! How can I help you today?</span>
                     </div>
                 </div>
             `;
