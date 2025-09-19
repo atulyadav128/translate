@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYAI Central - AYBot Personal Assistant</title>
+    <title>AYAI Central - AYTool Personal Assistant</title>
     
     <!-- PWA Meta Tags -->
-    <meta name="description" content="AYAI Central - Your personal AI assistant with voice features">
+    <meta name="description" content="AYAI Central - AYTool personal AI assistant with voice features">
     <meta name="theme-color" content="#007bff">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -140,8 +140,8 @@
                             AYAI Central
                         </h1>
                         <h2 class="subtitle is-4">
-                            <i class="fas fa-robot"></i>
-                            AYBot - Your Personal AI Assistant
+                            <i class="fas fa-tools"></i>
+                            AYTool - Your Personal AI Assistant
                         </h2>
                     </div>
 
@@ -149,7 +149,7 @@
                     <div class="chat-container" id="chatContainer">
                         <div class="message bot-message">
                             <div class="content">
-                                <strong>AYBot:</strong> Hello! I'm your personal AI assistant. Choose a mode above and start chatting with me!
+                                <strong>AYTool:</strong> Hello! I'm your personal AI assistant. Choose a mode above and start chatting with me!
                     </div>
                 </div>
             </div>
@@ -294,7 +294,7 @@
                         </h3>
                         <div class="content">
                             <p class="is-size-7 has-text-success">
-                                <strong>✅ AYBot is running!</strong> All features are working properly.
+                                <strong>✅ AYTool is running!</strong> All features are working properly.
                             </p>
                             <div class="mt-3">
                                 <h4 class="is-size-6 has-text-weight-bold">🎤 Voice Features</h4>
@@ -318,7 +318,7 @@
         <div class="modal-content has-text-centered">
             <div class="box">
                 <div class="loader"></div>
-                <p class="mt-3">AYBot is thinking...</p>
+                <p class="mt-3">AYTool is thinking...</p>
             </div>
         </div>
     </div>
@@ -424,7 +424,7 @@
             
             messageDiv.innerHTML = `
                 <div class="content">
-                    <strong>${sender === 'user' ? 'You' : 'AYBot'}:</strong> ${modeBadge}
+                    <strong>${sender === 'user' ? 'You' : 'AYTool'}:</strong> ${modeBadge}
                     <div class="mt-2">${text}</div>
                     <div class="is-size-7 has-text-grey mt-1">${timestamp}</div>
                 </div>
@@ -459,7 +459,7 @@
             document.getElementById('chatContainer').innerHTML = `
                 <div class="message bot-message">
                     <div class="content">
-                        <strong>AYBot:</strong> Chat cleared! How can I help you today?
+                        <strong>AYTool:</strong> Chat cleared! How can I help you today?
                     </div>
                 </div>
             `;
@@ -636,7 +636,7 @@
         document.getElementById('speakBtn').addEventListener('click', function() {
             const lastBotMessage = document.querySelector('.bot-message:last-child');
             if (lastBotMessage) {
-                // Get only the response content, excluding "AYBot:" and timestamp
+                // Get only the response content, excluding "AYTool:" and timestamp
                 const contentDiv = lastBotMessage.querySelector('.content');
                 const textNodes = Array.from(contentDiv.childNodes).filter(node => 
                     node.nodeType === Node.TEXT_NODE && node.textContent.trim()
@@ -647,8 +647,8 @@
                 let textToSpeak = '';
                 
                 if (mainContentDiv) {
-                    // Extract only the text content, removing "AYBot:" prefix
-                    textToSpeak = mainContentDiv.textContent.replace(/^AYBot:\s*/, '').trim();
+                    // Extract only the text content, removing "AYTool:" prefix
+                    textToSpeak = mainContentDiv.textContent.replace(/^AYTool:\s*/, '').trim();
                 }
                 
                 if (textToSpeak) {

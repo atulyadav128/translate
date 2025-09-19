@@ -77,7 +77,7 @@ def generate_response():
         response = openai.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are AYBot, a helpful personal assistant."},
+                {"role": "system", "content": "You are AYTool, a helpful personal assistant."},
                 {"role": "user", "content": prompt},
             ],
             max_tokens=500,

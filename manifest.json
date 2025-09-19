@@ -1,7 +1,7 @@
 {
-  "name": "AYAI Central - AYBot Personal Assistant",
+  "name": "AYAI Central - AYTool Personal Assistant",
   "short_name": "AYAI Central",
-  "description": "AYAI Central - Your personal AI assistant with voice features",
+  "description": "AYAI Central - AYTool personal AI assistant with voice features",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
