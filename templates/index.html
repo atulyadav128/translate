@@ -236,21 +236,6 @@
         @media (max-width: 768px) {
             .user-message { margin-left: 10%; }
             .bot-message { margin-right: 10%; }
-            .columns {
-                flex-direction: column !important;
-                height: auto !important;
-            }
-            .column {
-                height: auto !important;
-                overflow-y: visible !important;
-            }
-            .column.is-3 {
-                width: 100% !important;
-                margin-bottom: 1rem;
-            }
-            .column.is-6 {
-                width: 100% !important;
-            }
             .mode-selector { 
                 flex-direction: row;
                 flex-wrap: wrap;
@@ -265,34 +250,9 @@
             .mode-icon {
                 font-size: 1.2rem;
             }
-            .chat-container {
-                height: 50vh;
-                margin-bottom: 1rem;
-            }
         }
         
-        /* Force mobile layout for PWA */
-        @media (max-width: 1024px) {
-            .columns {
-                flex-direction: column !important;
-                height: auto !important;
-            }
-            .column {
-                height: auto !important;
-                overflow-y: visible !important;
-            }
-            .column.is-3 {
-                width: 100% !important;
-                margin-bottom: 1rem;
-            }
-            .column.is-6 {
-                width: 100% !important;
-            }
-            .chat-container {
-                height: 60vh;
-                margin-bottom: 1rem;
-            }
-        }
+        /* Removed conflicting 1024px rule - now handled by 1200px rule */
         
         /* Force mobile layout class */
         .mobile-layout .columns {
