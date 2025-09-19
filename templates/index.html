@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYBot - Personal Assistant</title>
+    <title>AYAI Central - AYBot Personal Assistant</title>
     
     <!-- PWA Meta Tags -->
-    <meta name="description" content="Your personal AI assistant with voice features">
+    <meta name="description" content="AYAI Central - Your personal AI assistant with voice features">
     <meta name="theme-color" content="#007bff">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="AYBot">
+    <meta name="apple-mobile-web-app-title" content="AYAI Central">
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json">
@@ -87,6 +87,18 @@
             color: #007bff;
             flex-shrink: 0;
         }
+        .title-section {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .title-section .title {
+            margin-bottom: 0.5rem;
+            color: #007bff;
+        }
+        .title-section .subtitle {
+            color: #6c757d;
+            font-weight: 400;
+        }
         @media (max-width: 768px) {
             .user-message { margin-left: 10%; }
             .bot-message { margin-right: 10%; }
@@ -111,8 +123,8 @@
     <nav class="navbar is-primary">
         <div class="navbar-brand">
             <a class="navbar-item" href="/">
-                <i class="fas fa-robot"></i>
-                <strong>AYBot</strong>
+                <i class="fas fa-brain"></i>
+                <strong>AYAI Central</strong>
             </a>
         </div>
     </nav>
@@ -122,10 +134,16 @@
             <div class="columns">
                 <!-- Main Chat Area -->
                 <div class="column is-8">
-                    <h1 class="title">
-                        <i class="fas fa-comments"></i>
-                        Chat with AYBot
-                    </h1>
+                    <div class="title-section">
+                        <h1 class="title is-2">
+                            <i class="fas fa-brain"></i>
+                            AYAI Central
+                        </h1>
+                        <h2 class="subtitle is-4">
+                            <i class="fas fa-robot"></i>
+                            AYBot - Your Personal AI Assistant
+                        </h2>
+                    </div>
 
                     <!-- Chat History -->
                     <div class="chat-container" id="chatContainer">
