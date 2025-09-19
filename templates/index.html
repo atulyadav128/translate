@@ -212,6 +212,17 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="field">
+                            <label class="label">Voice Selection</label>
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select id="voiceSelection">
+                                        <option value="auto">Auto (Best Available)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
             </div>
 
                     <div class="box">
@@ -326,6 +337,7 @@
                     
                     // Auto-speak the response
                     setTimeout(() => {
+                        console.log('Auto-speaking response:', responseText);
                         speakResponseContent(responseText);
                     }, 500); // Small delay to ensure the message is added to chat
                 })
@@ -460,9 +472,16 @@
                 speechSynthesis.cancel();
                 
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.rate = 0.9;
-                utterance.pitch = 1;
-                utterance.volume = 0.8;
+                utterance.rate = 0.85;  // Slightly slower for better clarity
+                utterance.pitch = 1.1;   // Slightly higher pitch for more natural sound
+                utterance.volume = 0.9;  // Higher volume for better clarity
+                
+                // Use the selected voice
+                const selectedVoice = getSelectedVoice();
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                    console.log('Using voice:', selectedVoice.name);
+                }
                 
                 utterance.onstart = function() {
                     document.getElementById('speakBtn').classList.add('is-loading');
@@ -499,14 +518,24 @@
 
         // Function to speak response content directly
         function speakResponseContent(responseText) {
+            console.log('speakResponseContent called with:', responseText);
+            console.log('speechSynthesis available:', !!speechSynthesis);
+            
             if (speechSynthesis && responseText) {
                 // Stop any current speech
                 speechSynthesis.cancel();
                 
                 const utterance = new SpeechSynthesisUtterance(responseText);
-                utterance.rate = 0.9;
-                utterance.pitch = 1;
-                utterance.volume = 0.8;
+                utterance.rate = 0.85;  // Slightly slower for better clarity
+                utterance.pitch = 1.1;   // Slightly higher pitch for more natural sound
+                utterance.volume = 0.9;  // Higher volume for better clarity
+                
+                // Use the selected voice
+                const selectedVoice = getSelectedVoice();
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                    console.log('Using voice:', selectedVoice.name);
+                }
                 
                 utterance.onstart = function() {
                     document.getElementById('speakBtn').classList.add('is-loading');
@@ -574,9 +603,66 @@
             }
         });
 
+        // Initialize voice selection
+        function initVoiceSelection() {
+            const voiceSelect = document.getElementById('voiceSelection');
+            
+            function populateVoices() {
+                const voices = speechSynthesis.getVoices();
+                const currentValue = voiceSelect.value;
+                
+                // Clear existing options except the first one
+                voiceSelect.innerHTML = '<option value="auto">Auto (Best Available)</option>';
+                
+                // Add available voices
+                voices.forEach((voice, index) => {
+                    if (voice.lang.startsWith('en')) {
+                        const option = document.createElement('option');
+                        option.value = index;
+                        option.textContent = `${voice.name} (${voice.lang})`;
+                        voiceSelect.appendChild(option);
+                    }
+                });
+                
+                // Restore selection if it was set
+                if (currentValue && currentValue !== 'auto') {
+                    voiceSelect.value = currentValue;
+                }
+            }
+            
+            // Populate voices immediately
+            populateVoices();
+            
+            // Re-populate when voices change (some browsers load voices asynchronously)
+            speechSynthesis.addEventListener('voiceschanged', populateVoices);
+        }
+
+        // Get selected voice
+        function getSelectedVoice() {
+            const voiceSelect = document.getElementById('voiceSelection');
+            const voices = speechSynthesis.getVoices();
+            
+            if (voiceSelect.value === 'auto') {
+                // Use the improved voice selection logic
+                const preferredVoices = voices.filter(voice => 
+                    voice.lang.startsWith('en') && 
+                    (voice.name.includes('Google') || 
+                     voice.name.includes('Microsoft') || 
+                     voice.name.includes('Natural') ||
+                     voice.name.includes('Enhanced'))
+                );
+                
+                return preferredVoices.length > 0 ? preferredVoices[0] : voices.find(voice => voice.lang.startsWith('en'));
+            } else {
+                const voiceIndex = parseInt(voiceSelect.value);
+                return voices[voiceIndex] || voices.find(voice => voice.lang.startsWith('en'));
+            }
+        }
+
         // Initialize
         updateModeInfo();
         initSpeechRecognition();
+        initVoiceSelection();
     </script>
 </body>
 </html>
