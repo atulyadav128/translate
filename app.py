@@ -11,6 +11,14 @@ load_dotenv()
 # Set OpenAI API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+# Debug: Check if API key is loaded
+if not openai.api_key:
+    print("WARNING: OPENAI_API_KEY not found in environment variables!")
+    print("Please create a .env file with your OpenAI API key:")
+    print("OPENAI_API_KEY=your_actual_api_key_here")
+else:
+    print(f"OpenAI API key loaded: {openai.api_key[:10]}...")
+
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'your-secret-key-change-this')
 
@@ -95,7 +103,10 @@ def generate_response():
         })
 
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Detailed Error: {e}")
+        print(f"Error type: {type(e).__name__}")
+        import traceback
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
 # Route to get chat history
