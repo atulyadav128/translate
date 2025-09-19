@@ -1,8 +1,6 @@
-from flask import Flask, request, jsonify, render_template, session
+from flask import Flask, request, jsonify, render_template
 import openai
 import os
-import json
-import datetime
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -11,19 +9,7 @@ load_dotenv()
 # Set OpenAI API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# Debug: Check if API key is loaded
-if not openai.api_key:
-    print("WARNING: OPENAI_API_KEY not found in environment variables!")
-    print("Please create a .env file with your OpenAI API key:")
-    print("OPENAI_API_KEY=your_actual_api_key_here")
-else:
-    print(f"OpenAI API key loaded: {openai.api_key[:10]}...")
-
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY', 'your-secret-key-change-this')
-
-# In-memory storage for chat history (in production, use a database)
-chat_history = {}
 
 # Route for the homepage
 @app.route('/')
@@ -38,12 +24,17 @@ def generate_response():
         mode = data.get("mode", "default")
         text = data.get("text", "")
         language = data.get("language", "Spanish")
+        
+        # Check if API key is available
+        if not openai.api_key:
+            return jsonify({"error": "OpenAI API key not configured. Please add OPENAI_API_KEY to your .env file."}), 500
+        
         if mode == 'translator' and not text:
             return jsonify({"error": "Text is required for translation"}), 400
         if mode == 'default' and not text:
             return jsonify({"error": "Prompt is required"}), 400
 
-        print(f"Prompt received: {text} (mode: {mode})")  # Log the received prompt
+        print(f"Prompt received: {text} (mode: {mode})")
 
         # Prompt templates for each mode
         if mode == 'translator':
@@ -67,97 +58,24 @@ def generate_response():
         else:
             prompt = text
 
-        # Call the OpenAI Chat API (for openai>=1.0.0)
+        # Call the OpenAI Chat API
         response = openai.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are AYBot, a helpful personal assistant."},
                 {"role": "user", "content": prompt},
             ],
-            #temperature=0.8,
-            max_completion_tokens=200,
-            top_p=1
+            max_tokens=500,
+            temperature=0.7
         )
 
         response_text = response.choices[0].message.content.strip()
-        
-        # Store chat history
-        session_id = session.get('session_id', str(datetime.datetime.now().timestamp()))
-        session['session_id'] = session_id
-        
-        if session_id not in chat_history:
-            chat_history[session_id] = []
-        
-        chat_entry = {
-            'timestamp': datetime.datetime.now().isoformat(),
-            'mode': mode,
-            'user_input': text,
-            'response': response_text
-        }
-        chat_history[session_id].append(chat_entry)
-        
-        return jsonify({
-            "response_text": response_text,
-            "session_id": session_id,
-            "timestamp": chat_entry['timestamp']
-        })
+        return jsonify({"response_text": response_text})
 
     except Exception as e:
-        print(f"Detailed Error: {e}")
-        print(f"Error type: {type(e).__name__}")
-        import traceback
-        traceback.print_exc()
+        print(f"Error: {e}")
         return jsonify({"error": str(e)}), 500
-
-# Route to get chat history
-@app.route('/chat_history', methods=['GET'])
-def get_chat_history():
-    session_id = session.get('session_id')
-    if not session_id or session_id not in chat_history:
-        return jsonify({"history": []})
-    
-    return jsonify({"history": chat_history[session_id]})
-
-# Route to clear chat history
-@app.route('/clear_history', methods=['POST'])
-def clear_history():
-    session_id = session.get('session_id')
-    if session_id and session_id in chat_history:
-        chat_history[session_id] = []
-    return jsonify({"message": "History cleared"})
-
-# Route to export chat history
-@app.route('/export_history', methods=['GET'])
-def export_history():
-    session_id = session.get('session_id')
-    if not session_id or session_id not in chat_history:
-        return jsonify({"error": "No history found"}), 404
-    
-    history_data = {
-        'session_id': session_id,
-        'exported_at': datetime.datetime.now().isoformat(),
-        'conversations': chat_history[session_id]
-    }
-    
-    return jsonify(history_data)
-
-# Route to get available modes
-@app.route('/modes', methods=['GET'])
-def get_modes():
-    modes = {
-        'default': 'Ask Anything',
-        'translator': 'Translator',
-        'weather': 'Weather Info',
-        'news': 'News Summary',
-        'finance': 'Financial Advice',
-        'code_helper': 'Code Helper',
-        'study_buddy': 'Study Buddy',
-        'creative_writer': 'Creative Writer',
-        'health_advisor': 'Health Advisor',
-        'travel_guide': 'Travel Guide'
-    }
-    return jsonify(modes)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=True)
