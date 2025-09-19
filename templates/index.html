@@ -318,20 +318,35 @@
         /* Ultra-aggressive mobile layout for PWA */
         @media screen and (max-width: 1200px) {
             .columns {
-                display: block !important;
-                flex-direction: column !important;
-                height: auto !important;
+                display: flex !important;
+                flex-direction: row !important;
+                height: 100vh !important;
+                overflow: hidden !important;
             }
-            .column {
-                display: block !important;
-                width: 100% !important;
-                height: auto !important;
-                overflow-y: visible !important;
-                margin-bottom: 1rem !important;
+            .column.is-2 {
+                width: 25% !important;
+                height: 100vh !important;
+                overflow-y: auto !important;
+                margin-bottom: 0 !important;
+            }
+            .column.is-8 {
+                width: 75% !important;
+                height: 100vh !important;
+                overflow-y: auto !important;
+                margin-bottom: 0 !important;
             }
             .chat-container {
-                height: 50vh !important;
-                margin-bottom: 1rem !important;
+                height: 70vh !important;
+                margin-bottom: 0 !important;
+            }
+            .mode-selector {
+                flex-direction: column !important;
+                gap: 0.5rem !important;
+            }
+            .mode-card {
+                min-height: 40px !important;
+                padding: 0.5rem !important;
+                font-size: 0.8rem !important;
             }
         }
     </style>
@@ -350,7 +365,7 @@
         <div class="container">
             <div class="columns">
                 <!-- AI Modes Sidebar -->
-                <div class="column is-3">
+                <div class="column is-2">
                     <div class="box">
                         <h3 class="title is-5 section-title">
                             <i class="fas fa-tools"></i>
@@ -402,7 +417,7 @@
             </div>
 
                 <!-- Main Chat Area -->
-                <div class="column is-6">
+                <div class="column is-8">
                     <div class="title-section">
                         <h1 class="title is-4 section-title">
                             <i class="fas fa-tools"></i>
@@ -451,7 +466,7 @@
                 </div>
 
                 <!-- Sidebar -->
-                <div class="column is-3">
+                <div class="column is-2">
                     <div class="box" style="display: none;">
                         <h3 class="title is-5 section-title">
                             <i class="fas fa-info-circle"></i>
