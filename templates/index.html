@@ -7,7 +7,7 @@
     
     <!-- PWA Meta Tags -->
     <meta name="description" content="AYAI Central - AYTool personal AI assistant with voice features">
-    <meta name="theme-color" content="#007bff">
+    <meta name="theme-color" content="#FF6B35">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="AYAI Central">
@@ -34,7 +34,7 @@
             border-radius: 8px;
         }
         .user-message {
-            background-color: #007bff;
+            background-color: #FF6B35;
             color: white;
             margin-left: 20%;
         }
@@ -70,21 +70,21 @@
             gap: 0.75rem;
         }
         .mode-card:hover {
-            border-color: #007bff;
-            background-color: #f8f9ff;
+            border-color: #FF6B35;
+            background-color: #FFF8F5;
             transform: translateX(3px);
-            box-shadow: 0 4px 12px rgba(0,123,255,0.15);
+            box-shadow: 0 4px 12px rgba(255,107,53,0.15);
         }
         .mode-card.active {
-            border-color: #007bff;
-            background-color: #e3f2fd;
+            border-color: #FF6B35;
+            background-color: #FFF0E6;
             transform: translateX(3px);
-            box-shadow: 0 6px 20px rgba(0,123,255,0.25);
-            border-left: 4px solid #007bff;
+            box-shadow: 0 6px 20px rgba(255,107,53,0.25);
+            border-left: 4px solid #FF6B35;
         }
         .mode-icon {
             font-size: 1.5rem;
-            color: #007bff;
+            color: #FF6B35;
             flex-shrink: 0;
         }
         .title-section {
@@ -93,11 +93,18 @@
         }
         .title-section .title {
             margin-bottom: 0.5rem;
-            color: #007bff;
+            color: #FF6B35;
         }
         .title-section .subtitle {
             color: #6c757d;
             font-weight: 400;
+        }
+        .button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        .button:active {
+            transform: translateY(0);
         }
         @media (max-width: 768px) {
             .user-message { margin-left: 10%; }
@@ -120,7 +127,7 @@
     </style>
 </head>
 <body>
-    <nav class="navbar is-primary">
+    <nav class="navbar" style="background-color: #FF6B35;">
         <div class="navbar-brand">
             <a class="navbar-item" href="/">
                 <i class="fas fa-brain"></i>
@@ -181,8 +188,8 @@
                                 <div>Travel Guide</div>
                             </div>
                         </div>
-                    </div>
-                </div>
+            </div>
+            </div>
 
                 <!-- Main Chat Area -->
                 <div class="column is-6">
@@ -208,12 +215,12 @@
                             <textarea class="textarea" id="userInput" placeholder="Type your message here or use voice input..." rows="2"></textarea>
                         </div>
                         <div class="control">
-                            <button class="button is-info" id="micBtn" title="Voice Input">
+                            <button class="button" id="micBtn" title="Voice Input" style="background-color: #FF6B35; color: white;">
                                 <i class="fas fa-microphone"></i>
                             </button>
                         </div>
                         <div class="control">
-                            <button class="button is-primary" id="sendBtn">
+                            <button class="button" id="sendBtn" style="background-color: #FF6B35; color: white;">
                                 <i class="fas fa-paper-plane"></i>
                             </button>
                         </div>
@@ -221,13 +228,13 @@
 
                     <!-- Quick Actions -->
                     <div class="buttons">
-                        <button class="button is-info" id="clearBtn">
+                        <button class="button" id="clearBtn" style="background-color: #FF6B35; color: white;">
                             <i class="fas fa-eraser"></i> Clear Chat
                         </button>
-                        <button class="button is-success" id="copyBtn">
+                        <button class="button" id="copyBtn" style="background-color: #FFA500; color: white;">
                             <i class="fas fa-copy"></i> Copy Last Response
                         </button>
-                        <button class="button is-warning" id="speakBtn" title="Speak Last Response">
+                        <button class="button" id="speakBtn" title="Speak Last Response" style="background-color: #FFA500; color: white;">
                             <i class="fas fa-volume-up"></i> Speak Response
                         </button>
                     </div>
