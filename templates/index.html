@@ -243,21 +243,18 @@
         // Mode selector functionality
         document.querySelectorAll('.mode-card').forEach(card => {
             card.addEventListener('click', function() {
-                console.log('Mode clicked:', this.dataset.mode);
                 document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
                 this.classList.add('active');
                 currentMode = this.dataset.mode;
-                console.log('Current mode set to:', currentMode);
                 updateModeInfo();
             });
         });
 
         function updateModeInfo() {
-            console.log('Updating mode info for:', currentMode);
             const modeInfo = {
                 'default': { name: 'Ask Anything', desc: 'Ask me anything and I\'ll do my best to help you!' },
                 'translator': { name: 'Translator', desc: 'Translate text to any language' },
-                'weather': { name: 'Weather Info', desc: 'Get current weather and forecasts' },
+                'weather': { name: 'Weather Info', desc: 'Get weather information and forecasts' },
                 'news': { name: 'News Summary', desc: 'Latest news headlines and summaries' },
                 'finance': { name: 'Financial Advice', desc: 'Money management and investment tips' },
                 'code_helper': { name: 'Code Helper', desc: 'Programming help and code examples' },
@@ -268,7 +265,6 @@
             };
             
             const info = modeInfo[currentMode];
-            console.log('Mode info:', info);
             document.getElementById('currentModeInfo').innerHTML = `
                 <p><strong>${info.name}</strong></p>
                 <p class="is-size-7">${info.desc}</p>

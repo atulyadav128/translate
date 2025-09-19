@@ -40,7 +40,10 @@ def generate_response():
         if mode == 'translator':
             prompt = f"Translate the following text to {language}: {text}"
         elif mode == 'weather':
-            prompt = f"Provide current weather information for {text if text else 'my location'}. Include temperature, conditions, and a brief forecast."
+            if text:
+                prompt = f"Provide current weather information for {text}. Include temperature, conditions, and a brief forecast. If you cannot access real-time weather data, provide general weather information about {text} and explain that you cannot access live weather data."
+            else:
+                prompt = "Provide general weather information and explain that I cannot access real-time weather data. Suggest how users can get current weather information."
         elif mode == 'news':
             prompt = f"Summarize the latest news headlines{f' about {text}' if text else ''}. Focus on major events and important updates."
         elif mode == 'finance':
