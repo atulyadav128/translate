@@ -35,11 +35,14 @@
         }
         .chat-container {
             height: 65vh;
+            max-height: 65vh;
             overflow-y: auto;
+            overflow-x: hidden;
             border: 1px solid #333333;
             border-radius: 12px;
             padding: 1rem;
             background-color: #1e1e1e;
+            scroll-behavior: smooth;
         }
         .columns {
             height: 100vh;
@@ -48,12 +51,15 @@
         .column {
             height: 100vh;
             overflow-y: auto;
+            overflow-x: hidden;
         }
-        .column.is-6 {
+        .column.is-2 {
             overflow-y: auto;
+            overflow-x: hidden;
         }
-        .column.is-3 {
-            overflow-y: visible;
+        .column.is-10 {
+            overflow-y: auto;
+            overflow-x: hidden;
         }
         .message {
             margin-bottom: 1rem;
@@ -147,6 +153,40 @@
             }
             .mode-icon {
                 font-size: 1.2rem;
+            }
+        }
+        
+        /* Zoom-specific scrolling improvements */
+        @media screen and (min-resolution: 150dpi) {
+            .chat-container {
+                scrollbar-width: thin;
+                scrollbar-color: #1976d2 #333333;
+            }
+            .chat-container::-webkit-scrollbar {
+                width: 8px;
+            }
+            .chat-container::-webkit-scrollbar-track {
+                background: #333333;
+                border-radius: 4px;
+            }
+            .chat-container::-webkit-scrollbar-thumb {
+                background: #1976d2;
+                border-radius: 4px;
+            }
+            .chat-container::-webkit-scrollbar-thumb:hover {
+                background: #1565c0;
+            }
+        }
+        
+        /* High zoom level adjustments */
+        @media screen and (min-resolution: 200dpi) {
+            .chat-container {
+                height: 70vh;
+                max-height: 70vh;
+            }
+            .message {
+                padding: 1rem;
+                margin-bottom: 1.5rem;
             }
         }
         .title-section {
@@ -303,19 +343,25 @@
             .columns {
                 display: block !important;
                 height: auto !important;
+                overflow: visible !important;
             }
             .column.is-2 {
                 width: 100% !important;
                 height: auto !important;
                 margin-bottom: 1rem !important;
+                overflow: visible !important;
             }
             .column.is-10 {
                 width: 100% !important;
                 height: auto !important;
+                overflow: visible !important;
             }
             .chat-container {
                 height: 60vh !important;
+                max-height: 60vh !important;
                 margin-bottom: 1rem !important;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
             }
             .mode-selector {
                 display: flex !important;
