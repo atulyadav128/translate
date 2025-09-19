@@ -146,7 +146,12 @@
                     <!-- Input Area -->
                     <div class="field has-addons">
                         <div class="control is-expanded">
-                            <textarea class="textarea" id="userInput" placeholder="Type your message here..." rows="2"></textarea>
+                            <textarea class="textarea" id="userInput" placeholder="Type your message here or use voice input..." rows="2"></textarea>
+                        </div>
+                        <div class="control">
+                            <button class="button is-info" id="micBtn" title="Voice Input">
+                                <i class="fas fa-microphone"></i>
+                            </button>
                         </div>
                         <div class="control">
                             <button class="button is-primary" id="sendBtn">
@@ -162,6 +167,9 @@
                         </button>
                         <button class="button is-success" id="copyBtn">
                             <i class="fas fa-copy"></i> Copy Last Response
+                        </button>
+                        <button class="button is-warning" id="speakBtn" title="Speak Last Response">
+                            <i class="fas fa-volume-up"></i> Speak Response
                         </button>
                     </div>
                 </div>
@@ -239,6 +247,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script>
         let currentMode = 'default';
+        let recognition = null;
+        let isListening = false;
+        let speechSynthesis = window.speechSynthesis;
 
         // Mode selector functionality
         document.querySelectorAll('.mode-card').forEach(card => {
@@ -379,8 +390,119 @@
         });
 
 
+        // Speech Recognition Setup
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+                
+                recognition.onstart = function() {
+                    isListening = true;
+                    document.getElementById('micBtn').classList.add('is-loading');
+                    document.getElementById('micBtn').innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                    showNotification('Listening... Speak now!', 'info');
+                };
+                
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    document.getElementById('userInput').value = transcript;
+                    showNotification('Voice input received!', 'success');
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    showNotification(`Speech recognition error: ${event.error}`, 'danger');
+                };
+                
+                recognition.onend = function() {
+                    isListening = false;
+                    document.getElementById('micBtn').classList.remove('is-loading');
+                    document.getElementById('micBtn').innerHTML = '<i class="fas fa-microphone"></i>';
+                };
+            } else {
+                showNotification('Speech recognition not supported in this browser', 'warning');
+            }
+        }
+
+        // Text-to-Speech Function
+        function speakText(text) {
+            if (speechSynthesis) {
+                // Stop any current speech
+                speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                utterance.volume = 0.8;
+                
+                utterance.onstart = function() {
+                    document.getElementById('speakBtn').classList.add('is-loading');
+                    document.getElementById('speakBtn').innerHTML = '<i class="fas fa-stop"></i> Stop';
+                    showNotification('Speaking...', 'info');
+                };
+                
+                utterance.onend = function() {
+                    document.getElementById('speakBtn').classList.remove('is-loading');
+                    document.getElementById('speakBtn').innerHTML = '<i class="fas fa-volume-up"></i> Speak Response';
+                };
+                
+                utterance.onerror = function(event) {
+                    console.error('Speech synthesis error:', event.error);
+                    document.getElementById('speakBtn').classList.remove('is-loading');
+                    document.getElementById('speakBtn').innerHTML = '<i class="fas fa-volume-up"></i> Speak Response';
+                    showNotification(`Speech error: ${event.error}`, 'danger');
+                };
+                
+                speechSynthesis.speak(utterance);
+            } else {
+                showNotification('Text-to-speech not supported in this browser', 'warning');
+            }
+        }
+
+        // Stop speech function
+        function stopSpeech() {
+            if (speechSynthesis) {
+                speechSynthesis.cancel();
+                document.getElementById('speakBtn').classList.remove('is-loading');
+                document.getElementById('speakBtn').innerHTML = '<i class="fas fa-volume-up"></i> Speak Response';
+            }
+        }
+
+        // Event listeners for speech functionality
+        document.getElementById('micBtn').addEventListener('click', function() {
+            if (isListening) {
+                recognition.stop();
+            } else {
+                if (recognition) {
+                    recognition.start();
+                } else {
+                    initSpeechRecognition();
+                    recognition.start();
+                }
+            }
+        });
+
+        document.getElementById('speakBtn').addEventListener('click', function() {
+            const lastBotMessage = document.querySelector('.bot-message:last-child');
+            if (lastBotMessage) {
+                const text = lastBotMessage.querySelector('div:not(.is-size-7)').textContent;
+                if (speechSynthesis.speaking) {
+                    stopSpeech();
+                } else {
+                    speakText(text);
+                }
+            } else {
+                showNotification('No response to speak', 'warning');
+            }
+        });
+
         // Initialize
         updateModeInfo();
+        initSpeechRecognition();
     </script>
 </body>
 </html>
