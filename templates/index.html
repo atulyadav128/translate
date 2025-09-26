@@ -140,9 +140,17 @@
         }
         .tabs li.is-active a {
             color: #ffffff !important;
-            border-color: #E55A2B; /* Darker Saffron */
-            background-color: #E55A2B;
-            box-shadow: 0 2px 4px rgba(229,90,43,0.5);
+            border-color: #E55A2B !important; /* Darker Saffron */
+            background-color: #E55A2B !important;
+            box-shadow: 0 2px 4px rgba(229,90,43,0.5) !important;
+            font-weight: 600 !important;
+            text-shadow: none !important;
+        }
+        .tabs li.is-active a i,
+        .tabs li.is-active a span {
+            color: #ffffff !important;
+            text-shadow: none !important;
+            font-weight: 600 !important;
         }
         .tabs li a i {
             margin-right: 0;
@@ -563,7 +571,7 @@
         function updateModeInfo() {
             const modeInfo = {
                 'default': { name: 'Ask Anything', desc: 'Ask me anything and I\'ll do my best to help you!' },
-                'translator': { name: 'Translator', desc: 'Translate text to/from any language' },
+                'translator': { name: 'Translator', desc: 'Auto-detect language and translate between English and Spanish' },
                 'weather': { name: 'Weather Info', desc: 'Get weather information and forecasts' },
                 'news': { name: 'News Summary', desc: 'Latest news headlines and summaries' },
                 'finance': { name: 'Financial Advice', desc: 'Money management and investment tips' },
@@ -581,13 +589,14 @@
                 <p class="is-size-7">${info.desc}</p>
             `;
             
-            // Smart language switching based on mode
+            // Auto-detection mode - no need to set language manually
             const languageSelect = document.getElementById('translationLanguage');
             if (currentMode === 'translator') {
-                // Set Spanish as default for translator mode
-                languageSelect.value = 'Spanish';
+                // Hide language selection for auto-detection mode
+                languageSelect.style.display = 'none';
             } else {
-                // Set English as default for all other modes
+                // Show language selection for other modes
+                languageSelect.style.display = 'block';
                 languageSelect.value = 'English';
             }
         }
@@ -622,7 +631,30 @@
             axios.post('/generate_response', requestData)
                 .then(response => {
                     const responseText = response.data.response_text;
-                    addMessageToChat(responseText, 'bot');
+                    
+                    // Handle translation mode with language detection
+                    if (currentMode === 'translator' && response.data.detected_language) {
+                        const detectedLang = response.data.detected_language;
+                        const originalText = response.data.original_text;
+                        
+                        // Create a more informative message for translations
+                        const translationMessage = `
+                            <div class="translation-info" style="margin-bottom: 0.5rem; padding: 0.5rem; background-color: rgba(25, 118, 210, 0.1); border-radius: 8px; border-left: 3px solid #1976d2;">
+                                <small style="color: #4A90E2;">
+                                    <i class="fas fa-language"></i> 
+                                    Detected: <strong>${detectedLang}</strong> → 
+                                    ${detectedLang.toLowerCase().includes('english') ? 'Spanish' : 'English'}
+                                </small>
+                            </div>
+                            <div class="translation-result">
+                                ${responseText}
+                            </div>
+                        `;
+                        addMessageToChat(translationMessage, 'bot');
+                    } else {
+                        addMessageToChat(responseText, 'bot');
+                    }
+                    
                     showNotification('Response generated successfully!', 'success');
                     
                     // Auto-speak the response
@@ -965,14 +997,40 @@
                     targetLang = langMap[translationLang] || 'en';
                 }
                 
-                // Find best voice for the target language, prioritizing male voices
-                const preferredVoices = voices.filter(voice => 
-                    voice.lang.startsWith(targetLang) && 
-                    (voice.name.includes('Google') || 
-                     voice.name.includes('Microsoft') || 
-                     voice.name.includes('Natural') ||
-                     voice.name.includes('Enhanced'))
-                );
+                // Find best voice for the target language, prioritizing American English
+                let preferredVoices;
+                if (targetLang === 'en') {
+                    // For English, prioritize American English (en-US) voices
+                    preferredVoices = voices.filter(voice => 
+                        voice.lang === 'en-US' && 
+                        (voice.name.includes('Google') || 
+                         voice.name.includes('Microsoft') || 
+                         voice.name.includes('Natural') ||
+                         voice.name.includes('Enhanced') ||
+                         voice.name.includes('US') ||
+                         voice.name.includes('American'))
+                    );
+                    
+                    // If no American voices found, fall back to any English
+                    if (preferredVoices.length === 0) {
+                        preferredVoices = voices.filter(voice => 
+                            voice.lang.startsWith('en') && 
+                            (voice.name.includes('Google') || 
+                             voice.name.includes('Microsoft') || 
+                             voice.name.includes('Natural') ||
+                             voice.name.includes('Enhanced'))
+                        );
+                    }
+                } else {
+                    // For other languages, use original logic
+                    preferredVoices = voices.filter(voice => 
+                        voice.lang.startsWith(targetLang) && 
+                        (voice.name.includes('Google') || 
+                         voice.name.includes('Microsoft') || 
+                         voice.name.includes('Natural') ||
+                         voice.name.includes('Enhanced'))
+                    );
+                }
                 
                 // Prioritize male voices
                 const maleVoices = preferredVoices.filter(voice => 
@@ -995,8 +1053,18 @@
                     return preferredVoices[0];
                 }
                 
-                // Fallback to any voice in the target language, prioritizing male voices
-                const fallbackVoices = voices.filter(voice => voice.lang.startsWith(targetLang));
+                // Fallback to any voice in the target language, prioritizing American English and male voices
+                let fallbackVoices;
+                if (targetLang === 'en') {
+                    // For English, prioritize American voices first
+                    fallbackVoices = voices.filter(voice => voice.lang === 'en-US');
+                    if (fallbackVoices.length === 0) {
+                        fallbackVoices = voices.filter(voice => voice.lang.startsWith('en'));
+                    }
+                } else {
+                    fallbackVoices = voices.filter(voice => voice.lang.startsWith(targetLang));
+                }
+                
                 const maleFallbackVoices = fallbackVoices.filter(voice => 
                     voice.name.toLowerCase().includes('male') || 
                     voice.name.toLowerCase().includes('man') ||
@@ -1016,11 +1084,12 @@
                     return fallbackVoices[0];
                 }
                 
-                // Final fallback to English
-                return voices.find(voice => voice.lang.startsWith('en'));
+                // Final fallback to American English, then any English
+                return voices.find(voice => voice.lang === 'en-US') || 
+                       voices.find(voice => voice.lang.startsWith('en'));
             } else {
                 const voiceIndex = parseInt(voiceSelect.value);
-                return voices[voiceIndex] || voices.find(voice => voice.lang.startsWith('en'));
+                return voices[voiceIndex] || voices.find(voice => voice.lang === 'en-US') || voices.find(voice => voice.lang.startsWith('en'));
             }
         }
 

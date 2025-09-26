@@ -47,10 +47,14 @@ def generate_response():
 
         # Prompt templates for each mode
         if mode == 'translator':
-            if language == "English":
-                prompt = f"Translate the following text to English. Return only the translated text, no explanations or additional text: {text}"
-            else:
-                prompt = f"Translate the following text to {language}. Return only the translated text, no explanations or additional text: {text}"
+            # Auto-detect language and translate to the opposite
+            prompt = f"""First, detect the language of this text: "{text}"
+Then translate it to the opposite language (if it's English, translate to Spanish; if it's Spanish, translate to English).
+Return your response in this exact format:
+DETECTED_LANGUAGE: [detected language]
+TRANSLATED_TEXT: [translated text]
+
+Text to analyze: {text}"""
         elif mode == 'weather':
             if text:
                 prompt = f"Provide current weather information for {text}. Include temperature, conditions, and a brief forecast. If you cannot access real-time weather data, provide general weather information about {text} and explain that you cannot access live weather data."
@@ -85,6 +89,29 @@ def generate_response():
         )
 
         response_text = response.choices[0].message.content.strip()
+        
+        # Parse translation response if in translator mode
+        if mode == 'translator':
+            try:
+                lines = response_text.split('\n')
+                detected_language = "Unknown"
+                translated_text = response_text
+                
+                for line in lines:
+                    if line.startswith('DETECTED_LANGUAGE:'):
+                        detected_language = line.replace('DETECTED_LANGUAGE:', '').strip()
+                    elif line.startswith('TRANSLATED_TEXT:'):
+                        translated_text = line.replace('TRANSLATED_TEXT:', '').strip()
+                
+                return jsonify({
+                    "response_text": translated_text,
+                    "detected_language": detected_language,
+                    "original_text": text
+                })
+            except Exception as e:
+                print(f"Error parsing translation response: {e}")
+                return jsonify({"response_text": response_text})
+        
         return jsonify({"response_text": response_text})
 
     except Exception as e:
