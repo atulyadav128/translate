@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Translator - Instant Translation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .logo i {
+            font-size: 48px;
+            color: white;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+        }
+
+        h1 {
+            font-size: 48px;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 10px;
+        }
+
+        .translator-box {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .language-selector {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 25px 30px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .lang-select-wrapper {
+            flex: 1;
+            max-width: 40%;
+        }
+
+        .lang-select-wrapper label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        select:hover {
+            border-color: #667eea;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .swap-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .swap-button:hover {
+            transform: rotate(180deg) scale(1.1);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .swap-button:active {
+            transform: rotate(180deg) scale(0.95);
+        }
+
+        .translation-panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .panel {
+            padding: 30px;
+            position: relative;
+        }
+
+        .panel:first-child {
+            border-right: 2px solid #f0f0f0;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-button {
+            background: transparent;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .icon-button:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .icon-button:active {
+            transform: translateY(0);
+        }
+
+        .icon-button:disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .icon-button:disabled:hover {
+            background: transparent;
+            transform: none;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 250px;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            resize: vertical;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+
+        .output-text {
+            min-height: 250px;
+            padding: 15px;
+            font-size: 18px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+            color: #333;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .char-count {
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        .detected-language {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+            animation: slideIn 0.5s ease;
+        }
+
+        .action-bar {
+            padding: 25px 30px;
+            background: #f8f9fa;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .translate-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .translate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .translate-button:active {
+            transform: translateY(0);
+        }
+
+        .translate-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .translate-button:disabled:hover {
+            transform: none;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .quick-action-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quick-action-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .quick-action-btn:active {
+            transform: translateY(0);
+        }
+
+        .history-section {
+            margin-top: 30px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.8s ease 0.2s backwards;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .history-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .clear-history-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .clear-history-btn:hover {
+            background: #ff3838;
+            transform: translateY(-2px);
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .history-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .history-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .history-langs {
+            font-size: 12px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .history-time {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .history-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .history-text strong {
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .empty-history {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-history i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            animation: slideInRight 0.3s ease;
+            max-width: 350px;
+        }
+
+        .notification.success {
+            border-left: 4px solid #2ecc71;
+        }
+
+        .notification.error {
+            border-left: 4px solid #ff4757;
+        }
+
+        .notification.info {
+            border-left: 4px solid #667eea;
+        }
+
+        .notification i {
+            font-size: 20px;
+        }
+
+        .notification.success i {
+            color: #2ecc71;
+        }
+
+        .notification.error i {
+            color: #ff4757;
+        }
+
+        .notification.info i {
+            color: #667eea;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 32px;
+            }
+
+            .translation-panels {
+                grid-template-columns: 1fr;
+            }
+
+            .panel:first-child {
+                border-right: none;
+                border-bottom: 2px solid #f0f0f0;
+            }
+
+            .language-selector {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .lang-select-wrapper {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .action-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .translate-button,
+            .quick-actions {
+                width: 100%;
+            }
+
+            .quick-actions {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Voice Recording Animation */
+        .recording {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-language"></i>
+                <h1>AI Translator</h1>
+            </div>
+            <p class="subtitle">Instant translation powered by artificial intelligence</p>
+        </header>
+
+        <div class="translator-box">
+            <div class="language-selector">
+                <div class="lang-select-wrapper">
+                    <label for="sourceLang">From</label>
+                    <select id="sourceLang">
+                        <option value="auto">Auto-detect</option>
+                    </select>
+                </div>
+
+                <button class="swap-button" id="swapBtn" title="Swap languages">
+                    <i class="fas fa-exchange-alt"></i>
+                </button>
+
+                <div class="lang-select-wrapper">
+                    <label for="targetLang">To</label>
+                    <select id="targetLang">
+                        <option value="en">English</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="translation-panels">
+                <div class="panel">
+                    <div class="panel-header">
+                        <span class="panel-title">Enter Text</span>
+                        <div class="panel-actions">
+                            <button class="icon-button" id="voiceInputBtn" title="Voice input">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <button class="icon-button" id="clearInputBtn" title="Clear text">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="sourceText" placeholder="Type or speak your text here..."></textarea>
+                    <div class="char-count">
+                        <span id="charCount">0</span> characters
+                    </div>
+                    <div id="detectedLangDiv"></div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <span class="panel-title">Translation</span>
+                        <div class="panel-actions">
+                            <button class="icon-button" id="speakOutputBtn" title="Listen to translation" disabled>
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                            <button class="icon-button" id="copyOutputBtn" title="Copy translation" disabled>
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="output-text" id="outputText">Your translation will appear here...</div>
+                    <div class="loading" id="loadingIndicator">
+                        <div class="spinner"></div>
+                        <p>Translating...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <button class="translate-button" id="translateBtn">
+                    <i class="fas fa-language"></i>
+                    Translate
+                </button>
+                <div class="quick-actions">
+                    <button class="quick-action-btn" id="clearAllBtn">
+                        <i class="fas fa-eraser"></i>
+                        Clear All
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="history-header">
+                <h2 class="history-title">
+                    <i class="fas fa-history"></i> Recent Translations
+                </h2>
+                <button class="clear-history-btn" id="clearHistoryBtn">
+                    <i class="fas fa-trash"></i> Clear History
+                </button>
+            </div>
+            <div class="history-list" id="historyList">
+                <div class="empty-history">
+                    <i class="fas fa-inbox"></i>
+                    <p>No translation history yet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let translationHistory = JSON.parse(localStorage.getItem('translationHistory') || '[]');
+        let recognition = null;
+        let isRecording = false;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadLanguages();
+            initSpeechRecognition();
+            renderHistory();
+            
+            // Load voices for text-to-speech
+            if ('speechSynthesis' in window) {
+                // Load voices immediately
+                window.speechSynthesis.getVoices();
+                
+                // Some browsers load voices asynchronously
+                window.speechSynthesis.addEventListener('voiceschanged', () => {
+                    const voices = window.speechSynthesis.getVoices();
+                    console.log('Voices loaded:', voices.length);
+                });
+            }
+            
+            // Event listeners
+            document.getElementById('translateBtn').addEventListener('click', translate);
+            document.getElementById('swapBtn').addEventListener('click', swapLanguages);
+            document.getElementById('clearInputBtn').addEventListener('click', clearInput);
+            document.getElementById('clearAllBtn').addEventListener('click', clearAll);
+            document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
+            document.getElementById('copyOutputBtn').addEventListener('click', copyOutput);
+            document.getElementById('speakOutputBtn').addEventListener('click', speakOutput);
+            document.getElementById('voiceInputBtn').addEventListener('click', startVoiceInput);
+            
+            // Auto-translate on Enter key
+            document.getElementById('sourceText').addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    translate();
+                }
+            });
+            
+            // Character count
+            document.getElementById('sourceText').addEventListener('input', updateCharCount);
+        });
+
+        // Load available languages
+        async function loadLanguages() {
+            try {
+                const response = await fetch('/api/languages');
+                const data = await response.json();
+                const languages = data.languages;
+                
+                const sourceLang = document.getElementById('sourceLang');
+                const targetLang = document.getElementById('targetLang');
+                
+                // Populate language dropdowns
+                Object.entries(languages).forEach(([code, name]) => {
+                    const option1 = new Option(name, code);
+                    const option2 = new Option(name, code);
+                    sourceLang.add(option1);
+                    targetLang.add(option2);
+                });
+                
+                // Set default: Auto-detect source, Spanish target
+                // (will auto-switch to English if Spanish is detected)
+                targetLang.value = 'es';
+                
+            } catch (error) {
+                showNotification('Failed to load languages', 'error');
+                console.error('Error loading languages:', error);
+            }
+        }
+
+        // Translate text
+        async function translate() {
+            const sourceText = document.getElementById('sourceText').value.trim();
+            const sourceLang = document.getElementById('sourceLang').value;
+            const targetLang = document.getElementById('targetLang').value;
+            
+            if (!sourceText) {
+                showNotification('Please enter text to translate', 'error');
+                return;
+            }
+            
+            if (sourceLang !== 'auto' && sourceLang === targetLang) {
+                showNotification('Source and target languages cannot be the same', 'error');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('loadingIndicator').classList.add('active');
+            document.getElementById('outputText').style.display = 'none';
+            document.getElementById('translateBtn').disabled = true;
+            
+            try {
+                const response = await fetch('/api/translate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: sourceText,
+                        source_lang: sourceLang,
+                        target_lang: targetLang
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                // Display translation
+                document.getElementById('outputText').textContent = data.translated_text;
+                document.getElementById('outputText').style.display = 'block';
+                
+                // Show detected language and auto-update target language
+                if (sourceLang === 'auto') {
+                    const detectedLangDiv = document.getElementById('detectedLangDiv');
+                    detectedLangDiv.innerHTML = `
+                        <div class="detected-language">
+                            <i class="fas fa-check-circle"></i>
+                            Detected: ${data.detected_language} → ${data.target_language}
+                        </div>
+                    `;
+                    
+                    // Automatically update the target language dropdown
+                    document.getElementById('targetLang').value = data.target_language_code;
+                }
+                
+                // Enable action buttons
+                document.getElementById('copyOutputBtn').disabled = false;
+                document.getElementById('speakOutputBtn').disabled = false;
+                
+                // Add to history
+                addToHistory({
+                    source: sourceText,
+                    translation: data.translated_text,
+                    sourceLang: data.detected_language || 'Auto',
+                    targetLang: data.target_language,
+                    timestamp: new Date().toISOString()
+                });
+                
+                showNotification('Translation completed!', 'success');
+                
+            } catch (error) {
+                showNotification(error.message || 'Translation failed', 'error');
+                console.error('Translation error:', error);
+            } finally {
+                document.getElementById('loadingIndicator').classList.remove('active');
+                document.getElementById('translateBtn').disabled = false;
+            }
+        }
+
+        // Swap languages
+        function swapLanguages() {
+            const sourceLang = document.getElementById('sourceLang');
+            const targetLang = document.getElementById('targetLang');
+            
+            if (sourceLang.value === 'auto') {
+                showNotification('Cannot swap when source is auto-detect', 'info');
+                return;
+            }
+            
+            const temp = sourceLang.value;
+            sourceLang.value = targetLang.value;
+            targetLang.value = temp;
+            
+            // Also swap text
+            const sourceText = document.getElementById('sourceText').value;
+            const outputText = document.getElementById('outputText').textContent;
+            
+            if (outputText && outputText !== 'Your translation will appear here...') {
+                document.getElementById('sourceText').value = outputText;
+                document.getElementById('outputText').textContent = sourceText;
+            }
+        }
+
+        // Clear input
+        function clearInput() {
+            document.getElementById('sourceText').value = '';
+            document.getElementById('detectedLangDiv').innerHTML = '';
+            updateCharCount();
+        }
+
+        // Clear all
+        function clearAll() {
+            clearInput();
+            document.getElementById('outputText').textContent = 'Your translation will appear here...';
+            document.getElementById('outputText').style.display = 'block';
+            document.getElementById('copyOutputBtn').disabled = true;
+            document.getElementById('speakOutputBtn').disabled = true;
+        }
+
+        // Update character count
+        function updateCharCount() {
+            const text = document.getElementById('sourceText').value;
+            document.getElementById('charCount').textContent = text.length;
+        }
+
+        // Copy output
+        function copyOutput() {
+            const outputText = document.getElementById('outputText').textContent;
+            navigator.clipboard.writeText(outputText).then(() => {
+                showNotification('Copied to clipboard!', 'success');
+            }).catch(() => {
+                showNotification('Failed to copy', 'error');
+            });
+        }
+
+        // Speak output
+        function speakOutput() {
+            const outputText = document.getElementById('outputText').textContent;
+            const targetLang = document.getElementById('targetLang').value;
+            
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(outputText);
+                utterance.lang = targetLang;
+                utterance.rate = 0.85;  // Slightly slower for deeper voice
+                utterance.pitch = 0.7;  // Lower pitch for male voice
+                utterance.volume = 1.0;
+                
+                // Try to select a male voice
+                const voices = window.speechSynthesis.getVoices();
+                const maleVoice = voices.find(voice => {
+                    const voiceName = voice.name.toLowerCase();
+                    const voiceLang = voice.lang.toLowerCase();
+                    
+                    // Check if voice matches target language
+                    const langMatch = voiceLang.startsWith(targetLang.toLowerCase());
+                    
+                    // Check for male voice indicators
+                    const isMale = voiceName.includes('male') || 
+                                   voiceName.includes('man') ||
+                                   voiceName.includes('david') ||
+                                   voiceName.includes('alex') ||
+                                   voiceName.includes('daniel') ||
+                                   voiceName.includes('mark') ||
+                                   voiceName.includes('james') ||
+                                   voiceName.includes('jorge') ||
+                                   voiceName.includes('diego') ||
+                                   voiceName.includes('carlos');
+                    
+                    return langMatch && isMale;
+                });
+                
+                // If male voice found, use it; otherwise use first available for language
+                if (maleVoice) {
+                    utterance.voice = maleVoice;
+                    console.log('Using male voice:', maleVoice.name);
+                } else {
+                    const anyVoiceForLang = voices.find(voice => 
+                        voice.lang.toLowerCase().startsWith(targetLang.toLowerCase())
+                    );
+                    if (anyVoiceForLang) {
+                        utterance.voice = anyVoiceForLang;
+                        console.log('Using voice:', anyVoiceForLang.name);
+                    }
+                }
+                
+                window.speechSynthesis.speak(utterance);
+                showNotification('Speaking...', 'info');
+            } else {
+                showNotification('Text-to-speech not supported', 'error');
+            }
+        }
+
+        // Initialize speech recognition
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = true;  // Keep listening until manually stopped
+                recognition.interimResults = true;  // Show interim results while speaking
+                
+                recognition.onstart = () => {
+                    isRecording = true;
+                    document.getElementById('voiceInputBtn').classList.add('recording');
+                    document.getElementById('voiceInputBtn').innerHTML = '<i class="fas fa-stop"></i>';
+                    showNotification('Listening... Click stop when done', 'info');
+                };
+                
+                recognition.onresult = (event) => {
+                    // Get the most recent result
+                    let transcript = '';
+                    for (let i = 0; i < event.results.length; i++) {
+                        transcript += event.results[i][0].transcript;
+                    }
+                    document.getElementById('sourceText').value = transcript;
+                    updateCharCount();
+                };
+                
+                recognition.onerror = (event) => {
+                    if (event.error !== 'aborted') {  // Don't show error on manual stop
+                        showNotification('Voice input error: ' + event.error, 'error');
+                    }
+                };
+                
+                recognition.onend = () => {
+                    isRecording = false;
+                    document.getElementById('voiceInputBtn').classList.remove('recording');
+                    document.getElementById('voiceInputBtn').innerHTML = '<i class="fas fa-microphone"></i>';
+                    if (document.getElementById('sourceText').value) {
+                        showNotification('Voice input complete!', 'success');
+                    }
+                };
+            }
+        }
+
+        // Start voice input
+        function startVoiceInput() {
+            if (!recognition) {
+                showNotification('Speech recognition not supported', 'error');
+                return;
+            }
+            
+            if (isRecording) {
+                recognition.stop();
+            } else {
+                const sourceLang = document.getElementById('sourceLang').value;
+                recognition.lang = sourceLang === 'auto' ? 'en-US' : sourceLang + '-' + sourceLang.toUpperCase();
+                recognition.start();
+            }
+        }
+
+        // Add to history
+        function addToHistory(item) {
+            translationHistory.unshift(item);
+            
+            // Keep only last 10 translations
+            if (translationHistory.length > 10) {
+                translationHistory = translationHistory.slice(0, 10);
+            }
+            
+            localStorage.setItem('translationHistory', JSON.stringify(translationHistory));
+            renderHistory();
+        }
+
+        // Render history
+        function renderHistory() {
+            const historyList = document.getElementById('historyList');
+            
+            if (translationHistory.length === 0) {
+                historyList.innerHTML = `
+                    <div class="empty-history">
+                        <i class="fas fa-inbox"></i>
+                        <p>No translation history yet</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            historyList.innerHTML = translationHistory.map((item, index) => {
+                const date = new Date(item.timestamp);
+                const timeAgo = getTimeAgo(date);
+                
+                return `
+                    <div class="history-item" onclick="loadFromHistory(${index})">
+                        <div class="history-item-header">
+                            <span class="history-langs">
+                                <i class="fas fa-arrow-right"></i> ${item.sourceLang} → ${item.targetLang}
+                            </span>
+                            <span class="history-time">${timeAgo}</span>
+                        </div>
+                        <div class="history-text">
+                            <strong>${truncateText(item.source, 100)}</strong>
+                            ${truncateText(item.translation, 100)}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Load from history
+        function loadFromHistory(index) {
+            const item = translationHistory[index];
+            document.getElementById('sourceText').value = item.source;
+            document.getElementById('outputText').textContent = item.translation;
+            document.getElementById('outputText').style.display = 'block';
+            document.getElementById('copyOutputBtn').disabled = false;
+            document.getElementById('speakOutputBtn').disabled = false;
+            updateCharCount();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Clear history
+        function clearHistory() {
+            if (confirm('Are you sure you want to clear all translation history?')) {
+                translationHistory = [];
+                localStorage.removeItem('translationHistory');
+                renderHistory();
+                showNotification('History cleared', 'success');
+            }
+        }
+
+        // Utility: Show notification
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            document.querySelectorAll('.notification').forEach(n => n.remove());
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const icon = type === 'success' ? 'check-circle' : 
+                        type === 'error' ? 'exclamation-circle' : 
+                        'info-circle';
+            
+            notification.innerHTML = `
+                <i class="fas fa-${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideInRight 0.3s ease reverse';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Utility: Truncate text
+        function truncateText(text, maxLength) {
+            return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+        }
+
+        // Utility: Get time ago
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            
+            if (seconds < 60) return 'Just now';
+            if (seconds < 3600) return Math.floor(seconds / 60) + ' min ago';
+            if (seconds < 86400) return Math.floor(seconds / 3600) + ' hr ago';
+            return Math.floor(seconds / 86400) + ' days ago';
+        }
+    </script>
+</body>
+</html>
+
+
